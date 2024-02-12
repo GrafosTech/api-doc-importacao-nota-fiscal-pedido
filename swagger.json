@@ -7,11 +7,11 @@
   },
   "servers": [
     {
-      "url": "https://backendportal.thankfulriver-a0b354f7.centralus.azurecontainerapps.io",
+      "url": "https://container-app-prod-ms-backend.proudsand-a95781db.eastus.azurecontainerapps.io",
       "description": "Prod"
     },
     {
-      "url": "https://api.grafostech.com",
+      "url": "https://api.grafostech.com.br",
       "description": "Url Microservices"
     }
   ],
@@ -22,7 +22,7 @@
           "Microservices"
         ],
         "summary": "Pega a URL do Backend para realizar as outras operações.",
-        "description": "Este endpoint é utilizado para retornar a URL sempre atualizada do backend para que o mesmo possa ser usado nas operaçõs seguintes. Indicamos atualizar a URL do backend uma vez por dia.<br/><br/>Indicamos sempre usar a URL (https://api.grafostech.com) neste endpoint.",
+        "description": "Este endpoint é utilizado para retornar a URL sempre atualizada do backend para que o mesmo possa ser usado nas operaçõs seguintes. Indicamos atualizar a URL do backend uma vez por dia.<br/><br/>Indicamos sempre usar a URL (https://api.grafostech.com.br) neste endpoint.",
         "responses": {
           "200": {
             "description": "Success",
@@ -472,7 +472,7 @@
         "properties": {
           "Backend": {
             "type": "string",
-            "default": "https://backendportal.thankfulriver-a0b354f7.centralus.azurecontainerapps.io"
+            "default": "https://container-app-prod-ms-backend.proudsand-a95781db.eastus.azurecontainerapps.io"
           }
         }
       },
