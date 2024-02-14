@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://localhost:5001",
+      "url": "https://container-app-prod-ms-backend.proudsand-a95781db.eastus.azurecontainerapps.io",
       "description": "Prod"
     },
     {
