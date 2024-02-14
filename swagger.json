@@ -440,7 +440,7 @@
           "NotaFiscal"
         ],
         "summary": "Cancela uma nota fiscal",
-        "description": "Endpoint utilizado para cancelar nota fiscal",
+        "description": "Este endpoint é utilizado para cancelar uma nota fiscal. É necessário fornecer a chave, id externo ou número do documento fiscal da nota a ser cancelada.",
         "requestBody": {
           "content": {
             "application/json": {
