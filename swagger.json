@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://container-app-prod-ms-backend.proudsand-a95781db.eastus.azurecontainerapps.io",
+      "url": "https://localhost:5001",
       "description": "Prod"
     },
     {
@@ -448,31 +448,31 @@
                 "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.NotaFiscalCancelamento"
               },
               "examples": {
-                "Exemplo 1": {
+                "Exemplo 1 - Por chave": {
                   "value": {
                     "chave": "48784564894456165789531657981",
                     "idExterno": "",
                     "numeroDocumentoFiscal": ""
                   }
                 },
-                "Exemplo 2": {
+                "Exemplo 2 - Por id externo": {
                   "value": {
-                    "chave": "48784564894456165789531657981",
-                    "idExterno": null,
+                    "chave": null,
+                    "idExterno": "78660",
                     "numeroDocumentoFiscal": null
                   }
                 },
-                "Exemplo 3": {
+                "Exemplo 3 - Por chave": {
                   "value": {
                     "chave": "48784564894456165789531657981"
                   }
                 },
-                "Exemplo 4": {
+                "Exemplo 4 - Por id externo": {
                   "value": {
                     "idExterno": "78660"
                   }
                 },
-                "Exemplo 5": {
+                "Exemplo 5 - Por numero do documento": {
                   "value": {
                     "numeroDocumentoFiscal": "265832"
                   }
