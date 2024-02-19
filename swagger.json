@@ -434,13 +434,371 @@
         }
       }
     },
+    "/api/NotaFiscal/Import/v2": {
+      "post": {
+        "tags": [
+          "NotaFiscal"
+        ],
+        "summary": "Posta uma nota fiscal/pedido para registro baseado no modelo preenchido.",
+        "description": "Endpoint utilizado para importar nota fiscal / pedido (conforme desejo do cliente). <br/><br/> Atenção nos campos chave, idExterno e número do documento fiscal, pois esses campos são usados para verificar se o pedido ou NF já está cadastrado no sistema ou não, sendo assim, caso seja enviado o mesmo idExterno, chave ou número do documento fiscal, o registro será desconsiderado. <br/><br/> Exemplo 1 - NF apenas com informações básicas, necessário chave e número do documento. (Nessa opção o endereço de entrega é considerado o endereço do destinatário). <br/><br/> Exemplo 2 - NF básica com a adição de valores e produtos. <br/><br/> Exemplo 3 - NF com produtos com a adição de peso e volume. <br/><br/> Exemplo 4 - Nesse exemplo, o endereço de entrega será considerado efetivamente o objeto que está no campo \"enderecoEntrega\" e não o endereço do destinatário. Desse modo, o destinatário pode possuir um endereço de entrega diferente do endereço de seu cadastro. <br/><br/> Exemplo 5 - Pedido: Segue os mesmos padrões de NF, porém com em vez de serem utilizados os campos chave e número do documento, deve ser utilizado o idExterno (Esse id pode ser o mesmo do sistema ERP, porém, caso o sistema repita ids, será realizado o update, não recomendamos esse método caso ocorra a repetição dos ids como citado anteriormente / No modo de pedido também é possível adicionar peso, volume, produtos e total, bem como endereço de entrega confome os exemplos acima). <br/><br/> Exemplo 6 - Neste exemplo o campo placa é passado como parâmetro e o sistema a levará em consideração para separar as NFs entre os veículos (Placas). <br/> Obs: As placas precisam estar cadastradas no sistema Grafos Tech para terem validade.<br/><br/>O campo 'code' na resposta do endpoint é uma string e pode ser uma dessas a seguir: <br/>ERRO<br/>NF_OK<br/>NOT_OK<br/>OK<br/>NF_OK_REENTREGA<br/>NOT_OK_NF_EM_ROTA<br/>Podem ser inseridos mais campos futuramente.<br/>Data de atualização: 19/02/2024.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Monitoramento_Backend.Models.NotaFiscal"
+              },
+              "examples": {
+                "Exemplo 1 - NF Básica": {
+                  "value": {
+                    "chave": "48784564894456165789531657981",
+                    "numeroDocumentoFiscal": "98765432101234567",
+                    "dataEmissao": "2023-08-15T12:30:45.678Z",
+                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                    "emitente": {
+                      "cnpj": "09876543210987",
+                      "razaoSocial": "Stark Industries",
+                      "nomeFantasia": "Stark",
+                      "endereco": {
+                        "logradouro": "Avenida Tony Stark",
+                        "numero": "123",
+                        "complemento": "Torre Stark",
+                        "bairro": "Malibu",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Los Angeles",
+                        "sigaUF": "CA",
+                        "cep": "90210"
+                      }
+                    },
+                    "destinatario": {
+                      "cpf": "36497824596",
+                      "razaoSocial": "Steve Rogers",
+                      "nomeFantasia": "Steve Rogers",
+                      "endereco": {
+                        "logradouro": "Rua dos idosos",
+                        "numero": "456",
+                        "complemento": "Sala 42",
+                        "bairro": "Centro",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Nova York",
+                        "sigaUF": "NY",
+                        "cep": "13578456"
+                      }
+                    }
+                  }
+                },
+                "Exemplo 2 - NF com produtos": {
+                  "value": {
+                    "chave": "48784564894456165789531657981",
+                    "numeroDocumentoFiscal": "98765432101234567",
+                    "dataEmissao": "2023-08-15T12:30:45.678Z",
+                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                    "emitente": {
+                      "cnpj": "09876543210987",
+                      "razaoSocial": "Stark Industries",
+                      "nomeFantasia": "Stark",
+                      "endereco": {
+                        "logradouro": "Avenida Tony Stark",
+                        "numero": "123",
+                        "complemento": "Torre Stark",
+                        "bairro": "Malibu",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Los Angeles",
+                        "sigaUF": "CA",
+                        "cep": "90210"
+                      }
+                    },
+                    "destinatario": {
+                      "cpf": "36497824596",
+                      "razaoSocial": "Steve Rogers",
+                      "nomeFantasia": "Steve Rogers",
+                      "endereco": {
+                        "logradouro": "Rua dos idosos",
+                        "numero": "456",
+                        "complemento": "Sala 42",
+                        "bairro": "Centro",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Nova York",
+                        "sigaUF": "NY",
+                        "cep": "13578456"
+                      }
+                    },
+                    "total": {
+                      "valor": 1500,
+                      "valorFrete": 50,
+                      "valorDesconto": 100,
+                      "valorOutros": 20,
+                      "valorTotal": 1470
+                    },
+                    "produtosServicos": [
+                      {
+                        "quantidade": 1,
+                        "valorUnitario": 500,
+                        "valorTotalBruto": 500,
+                        "valorDesconto": 50,
+                        "valorEntraValorTotal": 450,
+                        "produtoServico": {
+                          "codigoProdutoServico": "001",
+                          "codigoBarra": "1234567890123",
+                          "descricao": "Escudo de Vibranium",
+                          "codigoNcm": "98765432",
+                          "unidadeComercial": "un"
+                        }
+                      },
+                      {
+                        "quantidade": 2,
+                        "valorUnitario": 600,
+                        "valorTotalBruto": 1200,
+                        "valorDesconto": 50,
+                        "valorEntraValorTotal": 1150,
+                        "produtoServico": {
+                          "codigoProdutoServico": "002",
+                          "codigoBarra": "9876543210987",
+                          "descricao": "Armadura Mark XLVII",
+                          "codigoNcm": "87654321",
+                          "unidadeComercial": "un"
+                        }
+                      }
+                    ]
+                  }
+                },
+                "Exemplo 3 - NF com produtos + peso e volume": {
+                  "value": {
+                    "chave": "48784564894456165789531657981",
+                    "numeroDocumentoFiscal": "98765432101234567",
+                    "dataEmissao": "2023-08-15T12:30:45.678Z",
+                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                    "pesoBruto": 15.5,
+                    "pesoLiquido": 13.8,
+                    "quantidadeVolume": 2,
+                    "especie": "caixas",
+                    "emitente": {
+                      "cnpj": "09876543210987",
+                      "razaoSocial": "Stark Industries",
+                      "nomeFantasia": "Stark",
+                      "endereco": {
+                        "logradouro": "Avenida Tony Stark",
+                        "numero": "123",
+                        "complemento": "Torre Stark",
+                        "bairro": "Malibu",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Los Angeles",
+                        "sigaUF": "CA",
+                        "cep": "90210"
+                      }
+                    },
+                    "destinatario": {
+                      "cpf": "36497824596",
+                      "razaoSocial": "Steve Rogers",
+                      "nomeFantasia": "Steve Rogers",
+                      "endereco": {
+                        "logradouro": "Rua dos idosos",
+                        "numero": "456",
+                        "complemento": "Sala 42",
+                        "bairro": "Centro",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Nova York",
+                        "sigaUF": "NY",
+                        "cep": "13578456"
+                      }
+                    },
+                    "total": {
+                      "valor": 1500,
+                      "valorFrete": 50,
+                      "valorDesconto": 100,
+                      "valorOutros": 20,
+                      "valorTotal": 1470
+                    },
+                    "produtosServicos": [
+                      {
+                        "quantidade": 1,
+                        "valorUnitario": 500,
+                        "valorTotalBruto": 500,
+                        "valorDesconto": 50,
+                        "valorEntraValorTotal": 450,
+                        "produtoServico": {
+                          "codigoProdutoServico": "001",
+                          "codigoBarra": "1234567890123",
+                          "descricao": "Escudo de Vibranium",
+                          "codigoNcm": "98765432",
+                          "unidadeComercial": "un"
+                        }
+                      },
+                      {
+                        "quantidade": 2,
+                        "valorUnitario": 600,
+                        "valorTotalBruto": 1200,
+                        "valorDesconto": 50,
+                        "valorEntraValorTotal": 1150,
+                        "produtoServico": {
+                          "codigoProdutoServico": "002",
+                          "codigoBarra": "9876543210987",
+                          "descricao": "Armadura Mark XLVII",
+                          "codigoNcm": "87654321",
+                          "unidadeComercial": "un"
+                        }
+                      }
+                    ]
+                  }
+                },
+                "Exemplo 4 - NF Básica com endereço de entrega diferente do endereço de cadastro do destinatário": {
+                  "value": {
+                    "chave": "48784564894456165789531657981",
+                    "numeroDocumentoFiscal": "98765432101234567",
+                    "dataEmissao": "2023-08-15T12:30:45.678Z",
+                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                    "emitente": {
+                      "cnpj": "09876543210987",
+                      "razaoSocial": "Stark Industries",
+                      "nomeFantasia": "Stark",
+                      "endereco": {
+                        "logradouro": "Avenida Tony Stark",
+                        "numero": "123",
+                        "complemento": "Torre Stark",
+                        "bairro": "Malibu",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Los Angeles",
+                        "sigaUF": "CA",
+                        "cep": "90210"
+                      }
+                    },
+                    "destinatario": {
+                      "cpf": "36497824596",
+                      "razaoSocial": "Steve Rogers",
+                      "nomeFantasia": "Steve Rogers",
+                      "endereco": {
+                        "logradouro": "Rua dos idosos",
+                        "numero": "456",
+                        "complemento": "Sala 42",
+                        "bairro": "Centro",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Nova York",
+                        "sigaUF": "NY",
+                        "cep": "13578456"
+                      }
+                    },
+                    "enderecoEntrega": {
+                      "logradouro": "Rua das Ilusões",
+                      "numero": "789",
+                      "complemento": "Bloco C",
+                      "bairro": "Fantasia",
+                      "codigoMunicipio": "",
+                      "nomeMunicipio": "Cidade dos Sonhos",
+                      "sigaUF": "FS",
+                      "cep": "54321000"
+                    }
+                  }
+                },
+                "Exemplo 5 - Pedido": {
+                  "value": {
+                    "idExterno": "78933654",
+                    "dataEmissao": "2023-08-15T12:30:45.678Z",
+                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                    "emitente": {
+                      "cnpj": "09876543210987",
+                      "razaoSocial": "Stark Industries",
+                      "nomeFantasia": "Stark",
+                      "endereco": {
+                        "logradouro": "Avenida Tony Stark",
+                        "numero": "123",
+                        "complemento": "Torre Stark",
+                        "bairro": "Malibu",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Los Angeles",
+                        "sigaUF": "CA",
+                        "cep": "90210"
+                      }
+                    },
+                    "destinatario": {
+                      "cpf": "36497824596",
+                      "razaoSocial": "Steve Rogers",
+                      "nomeFantasia": "Steve Rogers",
+                      "endereco": {
+                        "logradouro": "Rua dos idosos",
+                        "numero": "456",
+                        "complemento": "Sala 42",
+                        "bairro": "Centro",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Nova York",
+                        "sigaUF": "NY",
+                        "cep": "13578456"
+                      }
+                    }
+                  }
+                },
+                "Exemplo 6 - NF com veículo definido": {
+                  "value": {
+                    "chave": "48784564894456165789531657981",
+                    "numeroDocumentoFiscal": "98765432101234567",
+                    "dataEmissao": "2023-08-15T12:30:45.678Z",
+                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                    "placa": "MIO0103",
+                    "emitente": {
+                      "cnpj": "09876543210987",
+                      "razaoSocial": "Stark Industries",
+                      "nomeFantasia": "Stark",
+                      "endereco": {
+                        "logradouro": "Avenida Tony Stark",
+                        "numero": "123",
+                        "complemento": "Torre Stark",
+                        "bairro": "Malibu",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Los Angeles",
+                        "sigaUF": "CA",
+                        "cep": "90210"
+                      }
+                    },
+                    "destinatario": {
+                      "cpf": "36497824596",
+                      "razaoSocial": "Steve Rogers",
+                      "nomeFantasia": "Steve Rogers",
+                      "endereco": {
+                        "logradouro": "Rua dos idosos",
+                        "numero": "456",
+                        "complemento": "Sala 42",
+                        "bairro": "Centro",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Nova York",
+                        "sigaUF": "NY",
+                        "cep": "13578456"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/NotaFiscal/Cancelar": {
       "post": {
         "tags": [
           "NotaFiscal"
         ],
         "summary": "Cancela uma nota fiscal",
-        "description": "Este endpoint é utilizado para cancelar uma nota fiscal. É necessário fornecer a chave, id externo ou número do documento fiscal da nota a ser cancelada.",
+        "description": "Este endpoint é utilizado para cancelar uma nota fiscal. É necessário fornecer a chave, id externo ou número do documento fiscal da nota a ser cancelada.<br/><br/>O campo 'code' na resposta do endpoint é uma string e pode ser uma dessas a seguir: <br/>ERRO<br/>NF_OK<br/>NOT_OK<br/>OK<br/>NF_OK_REENTREGA<br/>NOT_OK_NF_EM_ROTA<br/>Podem ser inseridos mais campos futuramente.<br/>Data de atualização: 19/02/2024.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -485,24 +843,30 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "example": "Mensagem de retorno"
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
+                }
               }
             }
           },
           "404": {
             "description": "Not Found",
             "content": {
-              "text/plain": {
-                "example": "Mensagem de retorno"
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
+                }
               }
             }
           },
           "400": {
             "description": "Bad Request",
             "content": {
-              "text/plain": {
-                "example": "Mensagem de retorno"
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
+                }
               }
             }
           }
@@ -1000,6 +1364,24 @@
           "numeroDocumentoFiscal": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Monitoramento_Backend.Models_API.ResultApi": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCodeHttp": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
