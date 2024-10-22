@@ -409,6 +409,45 @@
                       }
                     }
                   }
+                },
+                "Exemplo 7 - NF com IdExterno da Rota": {
+                  "value": {
+                    "chave": "48784564894456165789531657981",
+                    "numeroDocumentoFiscal": "98765432101234567",
+                    "dataEmissao": "2023-08-15T12:30:45.678Z",
+                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                    "idExternoRota": "55893",
+                    "emitente": {
+                      "cnpj": "09876543210987",
+                      "razaoSocial": "Stark Industries",
+                      "nomeFantasia": "Stark",
+                      "endereco": {
+                        "logradouro": "Avenida Tony Stark",
+                        "numero": "123",
+                        "complemento": "Torre Stark",
+                        "bairro": "Malibu",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Los Angeles",
+                        "sigaUF": "CA",
+                        "cep": "90210"
+                      }
+                    },
+                    "destinatario": {
+                      "cpf": "36497824596",
+                      "razaoSocial": "Steve Rogers",
+                      "nomeFantasia": "Steve Rogers",
+                      "endereco": {
+                        "logradouro": "Rua dos idosos",
+                        "numero": "456",
+                        "complemento": "Sala 42",
+                        "bairro": "Centro",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Nova York",
+                        "sigaUF": "NY",
+                        "cep": "13578456"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -732,6 +771,45 @@
                     "dataEmissao": "2023-08-15T12:30:45.678Z",
                     "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
                     "placa": "MIO0103",
+                    "emitente": {
+                      "cnpj": "09876543210987",
+                      "razaoSocial": "Stark Industries",
+                      "nomeFantasia": "Stark",
+                      "endereco": {
+                        "logradouro": "Avenida Tony Stark",
+                        "numero": "123",
+                        "complemento": "Torre Stark",
+                        "bairro": "Malibu",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Los Angeles",
+                        "sigaUF": "CA",
+                        "cep": "90210"
+                      }
+                    },
+                    "destinatario": {
+                      "cpf": "36497824596",
+                      "razaoSocial": "Steve Rogers",
+                      "nomeFantasia": "Steve Rogers",
+                      "endereco": {
+                        "logradouro": "Rua dos idosos",
+                        "numero": "456",
+                        "complemento": "Sala 42",
+                        "bairro": "Centro",
+                        "codigoMunicipio": "",
+                        "nomeMunicipio": "Nova York",
+                        "sigaUF": "NY",
+                        "cep": "13578456"
+                      }
+                    }
+                  }
+                },
+                "Exemplo 7 - NF com IdExterno da Rota": {
+                  "value": {
+                    "chave": "48784564894456165789531657981",
+                    "numeroDocumentoFiscal": "98765432101234567",
+                    "dataEmissao": "2023-08-15T12:30:45.678Z",
+                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                    "idExternoRota": "55893",
                     "emitente": {
                       "cnpj": "09876543210987",
                       "razaoSocial": "Stark Industries",
