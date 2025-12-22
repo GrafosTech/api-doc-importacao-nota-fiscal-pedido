@@ -86,7 +86,7 @@
           "NotaFiscal"
         ],
         "summary": "Posta uma nota fiscal/pedido para registro baseado no modelo preenchido.",
-        "description": "Endpoint utilizado para importar nota fiscal / pedido (conforme desejo do cliente). <br/><br/> Atenção nos campos chave, idExterno e número do documento fiscal, pois esses campos são usados para verificar se o pedido ou NF já está cadastrado no sistema ou não, sendo assim, caso seja enviado o mesmo idExterno, chave ou número do documento fiscal, o registro será desconsiderado. <br/><br/> Exemplo 1 - NF apenas com informações básicas, necessário chave e número do documento. (Nessa opção o endereço de entrega é considerado o endereço do destinatário). <br/><br/> Exemplo 2 - NF básica com a adição de valores e produtos. <br/><br/> Exemplo 3 - NF com produtos com a adição de peso e volume. <br/><br/> Exemplo 4 - Nesse exemplo, o endereço de entrega será considerado efetivamente o objeto que está no campo \"enderecoEntrega\" e não o endereço do destinatário. Desse modo, o destinatário pode possuir um endereço de entrega diferente do endereço de seu cadastro. <br/><br/> Exemplo 5 - Pedido: Segue os mesmos padrões de NF, porém com em vez de serem utilizados os campos chave e número do documento, deve ser utilizado o idExterno (Esse id pode ser o mesmo do sistema ERP, porém, caso o sistema repita ids, será realizado o update, não recomendamos esse método caso ocorra a repetição dos ids como citado anteriormente / No modo de pedido também é possível adicionar peso, volume, produtos e total, bem como endereço de entrega confome os exemplos acima). <br/><br/> Exemplo 6 - Neste exemplo o campo placa é passado como parâmetro e o sistema a levará em consideração para separar as NFs entre os veículos (Placas). <br/> Obs: As placas precisam estar cadastradas no sistema Grafos Tech para terem validade. <br/><br/> Exemplo 7 - Neste exemplo o campo IdExternoRota é passa do como parametro, e o sistema levará em consideração a rota para separar as NFs, caso não encontre nenhuma rota com o IdExterno enviado a NF será adicionada seguindo o fluxo normal. Caso a NF já esteja em uma rota, basta passar outro IdExternoRota com a mesma Chave/IdExterno/NumeroDocumento para a NF ser transferida para outra rota.",
+        "description": "Endpoint utilizado para importar nota fiscal / pedido (conforme desejo do cliente). <br/><br/> Atenção nos campos chave, idExterno e número do documento fiscal, pois esses campos são usados para verificar se o pedido ou NF já está cadastrado no sistema ou não, sendo assim, caso seja enviado o mesmo idExterno, chave ou número do documento fiscal, o registro será desconsiderado.<br/><br/> Exemplo 0 - Exemplo completo com todas as informações possíveis no requestBody.<br/><br/> Exemplo 1 - NF apenas com informações básicas, necessário chave e número do documento. (Nessa opção o endereço de entrega é considerado o endereço do destinatário). <br/><br/> Exemplo 2 - NF básica com a adição de valores e produtos. <br/><br/> Exemplo 3 - NF com produtos com a adição de peso e volume. <br/><br/> Exemplo 4 - Nesse exemplo, o endereço de entrega será considerado efetivamente o objeto que está no campo \"enderecoEntrega\" e não o endereço do destinatário. Desse modo, o destinatário pode possuir um endereço de entrega diferente do endereço de seu cadastro. <br/><br/> Exemplo 5 - Pedido: Segue os mesmos padrões de NF, porém com em vez de serem utilizados os campos chave e número do documento, deve ser utilizado o idExterno (Esse id pode ser o mesmo do sistema ERP, porém, caso o sistema repita ids, será realizado o update, não recomendamos esse método caso ocorra a repetição dos ids como citado anteriormente / No modo de pedido também é possível adicionar peso, volume, produtos e total, bem como endereço de entrega confome os exemplos acima). <br/><br/> Exemplo 6 - Neste exemplo o campo placa é passado como parâmetro e o sistema a levará em consideração para separar as NFs entre os veículos (Placas). <br/> Obs: As placas precisam estar cadastradas no sistema Grafos Tech para terem validade. <br/><br/> Exemplo 7 - Neste exemplo o campo IdExternoRota é passa do como parametro, e o sistema levará em consideração a rota para separar as NFs, caso não encontre nenhuma rota com o IdExterno enviado a NF será adicionada seguindo o fluxo normal. Caso a NF já esteja em uma rota, basta passar outro IdExternoRota com a mesma Chave/IdExterno/NumeroDocumento para a NF ser transferida para outra rota.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -94,6 +94,205 @@
                 "$ref": "#/components/schemas/Monitoramento_Backend.Models.NotaFiscal"
               },
               "examples": {
+                "Exemplo 0 - NF Completa": {
+                  "value": {
+                    "chave": "35210712345678901234567890123456-uli2",
+                    "idExterno": "NF-2024-001234-uli2",
+                    "naturezaOperacao": "VENDA",
+                    "numeroDocumentoFiscal": "123456-uli2",
+                    "dataEmissao": "2024-01-15T10:30:00",
+                    "dataSaidaEntrada": "2024-01-15T14:00:00",
+                    "tipoOperacao": 0,
+                    "finalidadeEmissao": 1,
+                    "informacaoAdicionalFisco": "Informações adicionais para o fisco",
+                    "informacaoComplementar": "Informações complementares da nota fiscal",
+                    "placa": "ABC-1234",
+                    "veiculoCodigoExterno": "VEI-001",
+                    "formaPagamento": "Boleto",
+                    "especie": "Nota Fiscal Eletrônica",
+                    "cfop": "5102",
+                    "codUltimaOcorrencia": "100",
+                    "descricaoUltimaOcorrencia": "Autorizado o uso da NF-e",
+                    "dataProgramada": "2024-01-20T08:00:00",
+                    "previsaoEntrega": "2024-01-20T17:00:00",
+                    "agendamentoTransportadora": "2024-01-19T10:00:00",
+                    "setorEntrega": "Setor Norte",
+                    "transportadoraDocumento": "12.345.678/0001-90",
+                    "adicionarDocEmRota": true,
+                    "motoristaNome": "João Silva",
+                    "rotaRegiaoNome": "Região Metropolitana",
+                    "localInicioDescricao": "Centro de Distribuição",
+                    "localFimDescricao": "Cliente Final",
+                    "agendamentoInicio": "2024-01-20T08:00:00",
+                    "agendamentoFim": "2024-01-20T18:00:00",
+                    "tipoDocumento": 0,
+                    "tipoAgendamento": 1,
+                    "pesoBruto": 150.50,
+                    "pesoLiquido": 140.25,
+                    "pesoCalculado": 145.00,
+                    "cubagem": 2.5,
+                    "quantidadePares": 10,
+                    "quantidadeVolume": 5,
+                    "idExternoRota": "IXL7G71-20251217-23",
+                    "emitente": {
+                      "idExterno": "EMI-001",
+                      "cpf": null,
+                      "cnpj": "12.345.678/0001-90",
+                      "razaoSocial": "Empresa Emitente LTDA",
+                      "nomeFantasia": "Emitente Comércio",
+                      "inscricaoEstadual": "123.456.789.012",
+                      "telefone": "(11) 98765-4321",
+                      "telefone2": "(11) 98765-4322",
+                      "email": "contato@emitente.com.br",
+                      "tipo": 2,
+                      "endereco": {
+                        "logradouro": "Rua das Flores",
+                        "numero": "123",
+                        "complemento": "Sala 101",
+                        "bairro": "Centro",
+                        "codigoMunicipio": "3550308",
+                        "nomeMunicipio": "São Paulo",
+                        "sigaUF": "SP",
+                        "cep": "01234-567",
+                        "latitude": -23.5505199,
+                        "longitude": -46.6333094,
+                        "altitude": 760.0,
+                        "preencherLatLng": true
+                      }
+                    },
+                    "destinatario": {
+                      "idExterno": "DES-001",
+                      "cpf": "123.456.789-00",
+                      "cnpj": null,
+                      "razaoSocial": "Cliente Destinatário LTDA",
+                      "nomeFantasia": "Destinatário Comércio",
+                      "inscricaoEstadual": "987.654.321.098",
+                      "telefone": "(11) 91234-5678",
+                      "telefone2": null,
+                      "email": "contato@destinatario.com.br",
+                      "tipo": 1,
+                      "endereco": {
+                        "logradouro": "Avenida Paulista",
+                        "numero": "1000",
+                        "complemento": "Apto 45",
+                        "bairro": "Bela Vista",
+                        "codigoMunicipio": "3550308",
+                        "nomeMunicipio": "São Paulo",
+                        "sigaUF": "SP",
+                        "cep": "01310-100",
+                        "latitude": -23.5613991,
+                        "longitude": -46.6565712,
+                        "altitude": 780.0,
+                        "preencherLatLng": true
+                      }
+                    },
+                    "remetente": {
+                      "idExterno": "REM-001",
+                      "cpf": null,
+                      "cnpj": "98.765.432/0001-10",
+                      "razaoSocial": "Remetente Transportes LTDA",
+                      "nomeFantasia": "Remetente Log",
+                      "inscricaoEstadual": "111.222.333.444",
+                      "telefone": "(11) 91111-2222",
+                      "telefone2": null,
+                      "email": "contato@remetente.com.br",
+                      "tipo": 4,
+                      "endereco": {
+                        "logradouro": "Rua dos Remetentes",
+                        "numero": "500",
+                        "complemento": null,
+                        "bairro": "Vila Remetente",
+                        "codigoMunicipio": "3550308",
+                        "nomeMunicipio": "São Paulo",
+                        "sigaUF": "SP",
+                        "cep": "02000-000",
+                        "latitude": -23.5000000,
+                        "longitude": -46.6000000,
+                        "altitude": 750.0,
+                        "preencherLatLng": true
+                      }
+                    },
+                    "recebedor": {
+                      "idExterno": "REC-001",
+                      "cpf": "987.654.321-00",
+                      "cnpj": null,
+                      "razaoSocial": "Recebedor Final LTDA",
+                      "nomeFantasia": "Recebedor Comércio",
+                      "inscricaoEstadual": "555.666.777.888",
+                      "telefone": "(11) 93333-4444",
+                      "telefone2": null,
+                      "email": "contato@recebedor.com.br",
+                      "tipo": 5,
+                      "endereco": {
+                        "logradouro": "Rua dos Recebedores",
+                        "numero": "750",
+                        "complemento": "Galpão 2",
+                        "bairro": "Distrito Industrial",
+                        "codigoMunicipio": "3550308",
+                        "nomeMunicipio": "São Paulo",
+                        "sigaUF": "SP",
+                        "cep": "03000-000",
+                        "latitude": -23.5500000,
+                        "longitude": -46.6500000,
+                        "altitude": 770.0,
+                        "preencherLatLng": true
+                      }
+                    },
+                    "total": {
+                      "valor": 1000.00,
+                      "valorFrete": 50.00,
+                      "valorDesconto": 100.00,
+                      "valorOutros": 25.00,
+                      "valorTotal": 975.00
+                    },
+                    "enderecoEntrega": {
+                      "logradouro": "Rua de Entrega",
+                      "numero": "999",
+                      "complemento": "Portão 3",
+                      "bairro": "Bairro Entrega",
+                      "codigoMunicipio": "3550308",
+                      "nomeMunicipio": "São Paulo",
+                      "sigaUF": "SP",
+                      "cep": "04000-000",
+                      "latitude": -23.5600000,
+                      "longitude": -46.6400000,
+                      "altitude": 775.0,
+                      "preencherLatLng": true
+                    },
+                    "produtosServicos": [
+                      {
+                        "quantidade": 10.0,
+                        "valorUnitario": 50.00,
+                        "valorTotalBruto": 500.00,
+                        "valorDesconto": 25.00,
+                        "valorEntraValorTotal": 1,
+                        "produtoServico": {
+                          "codigoProdutoServico": "PROD-001",
+                          "codigoBarra": "7891234567890",
+                          "descricao": "Produto Exemplo 1",
+                          "codigoNcm": "1234.56.78",
+                          "unidadeComercial": "UN"
+                        }
+                      },
+                      {
+                        "quantidade": 5.0,
+                        "valorUnitario": 100.00,
+                        "valorTotalBruto": 500.00,
+                        "valorDesconto": 50.00,
+                        "valorEntraValorTotal": 1,
+                        "produtoServico": {
+                          "codigoProdutoServico": "PROD-002",
+                          "codigoBarra": "7891234567891",
+                          "descricao": "Produto Exemplo 2",
+                          "codigoNcm": "2345.67.89",
+                          "unidadeComercial": "KG"
+                        }
+                      }
+                    ],
+                    "vendedorDescricao": "Vendedor João",
+                    "localEntregaDescricao": "Loja Principal - Centro"
+                  }
+                },
                 "Exemplo 1 - NF Básica": {
                   "value": {
                     "chave": "48784564894456165789531657981",
@@ -522,7 +721,7 @@
           "NotaFiscal"
         ],
         "summary": "Posta uma nota fiscal/pedido para registro baseado no modelo preenchido.",
-        "description": "Endpoint utilizado para importar nota fiscal / pedido (conforme desejo do cliente). <br/><br/> Atenção nos campos chave, idExterno e número do documento fiscal, pois esses campos são usados para verificar se o pedido ou NF já está cadastrado no sistema ou não, sendo assim, caso seja enviado o mesmo idExterno, chave ou número do documento fiscal, o registro será desconsiderado. <br/><br/> Exemplo 1 - NF apenas com informações básicas, necessário chave e número do documento. (Nessa opção o endereço de entrega é considerado o endereço do destinatário). <br/><br/> Exemplo 2 - NF básica com a adição de valores e produtos. <br/><br/> Exemplo 3 - NF com produtos com a adição de peso e volume. <br/><br/> Exemplo 4 - Nesse exemplo, o endereço de entrega será considerado efetivamente o objeto que está no campo \"enderecoEntrega\" e não o endereço do destinatário. Desse modo, o destinatário pode possuir um endereço de entrega diferente do endereço de seu cadastro. <br/><br/> Exemplo 5 - Pedido: Segue os mesmos padrões de NF, porém com em vez de serem utilizados os campos chave e número do documento, deve ser utilizado o idExterno (Esse id pode ser o mesmo do sistema ERP, porém, caso o sistema repita ids, será realizado o update, não recomendamos esse método caso ocorra a repetição dos ids como citado anteriormente / No modo de pedido também é possível adicionar peso, volume, produtos e total, bem como endereço de entrega confome os exemplos acima). <br/><br/> Exemplo 6 - Neste exemplo o campo placa é passado como parâmetro e o sistema a levará em consideração para separar as NFs entre os veículos (Placas). <br/> Obs: As placas precisam estar cadastradas no sistema Grafos Tech para terem validade. <br/><br/> Exemplo 7 - Neste exemplo o campo IdExternoRota é passa do como parametro, e o sistema levará em consideração a rota para separar as NFs, caso não encontre nenhuma rota com o IdExterno enviado a NF será adicionada seguindo o fluxo normal. Caso a NF já esteja em uma rota, basta passar outro IdExternoRota com a mesma Chave/IdExterno/NumeroDocumento para a NF ser transferida para outra rota.",
+        "description": "Endpoint utilizado para importar nota fiscal / pedido (conforme desejo do cliente). <br/><br/> Atenção nos campos chave, idExterno e número do documento fiscal, pois esses campos são usados para verificar se o pedido ou NF já está cadastrado no sistema ou não, sendo assim, caso seja enviado o mesmo idExterno, chave ou número do documento fiscal, o registro será desconsiderado.<br/><br/> Exemplo 0 - Exemplo completo com todas as informações possíveis no requestBody. <br/><br/> Exemplo 1 - NF apenas com informações básicas, necessário chave e número do documento. (Nessa opção o endereço de entrega é considerado o endereço do destinatário). <br/><br/> Exemplo 2 - NF básica com a adição de valores e produtos. <br/><br/> Exemplo 3 - NF com produtos com a adição de peso e volume. <br/><br/> Exemplo 4 - Nesse exemplo, o endereço de entrega será considerado efetivamente o objeto que está no campo \"enderecoEntrega\" e não o endereço do destinatário. Desse modo, o destinatário pode possuir um endereço de entrega diferente do endereço de seu cadastro. <br/><br/> Exemplo 5 - Pedido: Segue os mesmos padrões de NF, porém com em vez de serem utilizados os campos chave e número do documento, deve ser utilizado o idExterno (Esse id pode ser o mesmo do sistema ERP, porém, caso o sistema repita ids, será realizado o update, não recomendamos esse método caso ocorra a repetição dos ids como citado anteriormente / No modo de pedido também é possível adicionar peso, volume, produtos e total, bem como endereço de entrega confome os exemplos acima). <br/><br/> Exemplo 6 - Neste exemplo o campo placa é passado como parâmetro e o sistema a levará em consideração para separar as NFs entre os veículos (Placas). <br/> Obs: As placas precisam estar cadastradas no sistema Grafos Tech para terem validade. <br/><br/> Exemplo 7 - Neste exemplo o campo IdExternoRota é passa do como parametro, e o sistema levará em consideração a rota para separar as NFs, caso não encontre nenhuma rota com o IdExterno enviado a NF será adicionada seguindo o fluxo normal. Caso a NF já esteja em uma rota, basta passar outro IdExternoRota com a mesma Chave/IdExterno/NumeroDocumento para a NF ser transferida para outra rota.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -530,6 +729,205 @@
                 "$ref": "#/components/schemas/Monitoramento_Backend.Models.NotaFiscal"
               },
               "examples": {
+                "Exemplo 0 - NF Completa": {
+                  "value": {
+                    "chave": "35210712345678901234567890123456-uli2",
+                    "idExterno": "NF-2024-001234-uli2",
+                    "naturezaOperacao": "VENDA",
+                    "numeroDocumentoFiscal": "123456-uli2",
+                    "dataEmissao": "2024-01-15T10:30:00",
+                    "dataSaidaEntrada": "2024-01-15T14:00:00",
+                    "tipoOperacao": 0,
+                    "finalidadeEmissao": 1,
+                    "informacaoAdicionalFisco": "Informações adicionais para o fisco",
+                    "informacaoComplementar": "Informações complementares da nota fiscal",
+                    "placa": "ABC-1234",
+                    "veiculoCodigoExterno": "VEI-001",
+                    "formaPagamento": "Boleto",
+                    "especie": "Nota Fiscal Eletrônica",
+                    "cfop": "5102",
+                    "codUltimaOcorrencia": "100",
+                    "descricaoUltimaOcorrencia": "Autorizado o uso da NF-e",
+                    "dataProgramada": "2024-01-20T08:00:00",
+                    "previsaoEntrega": "2024-01-20T17:00:00",
+                    "agendamentoTransportadora": "2024-01-19T10:00:00",
+                    "setorEntrega": "Setor Norte",
+                    "transportadoraDocumento": "12.345.678/0001-90",
+                    "adicionarDocEmRota": true,
+                    "motoristaNome": "João Silva",
+                    "rotaRegiaoNome": "Região Metropolitana",
+                    "localInicioDescricao": "Centro de Distribuição",
+                    "localFimDescricao": "Cliente Final",
+                    "agendamentoInicio": "2024-01-20T08:00:00",
+                    "agendamentoFim": "2024-01-20T18:00:00",
+                    "tipoDocumento": 0,
+                    "tipoAgendamento": 1,
+                    "pesoBruto": 150.50,
+                    "pesoLiquido": 140.25,
+                    "pesoCalculado": 145.00,
+                    "cubagem": 2.5,
+                    "quantidadePares": 10,
+                    "quantidadeVolume": 5,
+                    "idExternoRota": "IXL7G71-20251217-23",
+                    "emitente": {
+                      "idExterno": "EMI-001",
+                      "cpf": null,
+                      "cnpj": "12.345.678/0001-90",
+                      "razaoSocial": "Empresa Emitente LTDA",
+                      "nomeFantasia": "Emitente Comércio",
+                      "inscricaoEstadual": "123.456.789.012",
+                      "telefone": "(11) 98765-4321",
+                      "telefone2": "(11) 98765-4322",
+                      "email": "contato@emitente.com.br",
+                      "tipo": 2,
+                      "endereco": {
+                        "logradouro": "Rua das Flores",
+                        "numero": "123",
+                        "complemento": "Sala 101",
+                        "bairro": "Centro",
+                        "codigoMunicipio": "3550308",
+                        "nomeMunicipio": "São Paulo",
+                        "sigaUF": "SP",
+                        "cep": "01234-567",
+                        "latitude": -23.5505199,
+                        "longitude": -46.6333094,
+                        "altitude": 760.0,
+                        "preencherLatLng": true
+                      }
+                    },
+                    "destinatario": {
+                      "idExterno": "DES-001",
+                      "cpf": "123.456.789-00",
+                      "cnpj": null,
+                      "razaoSocial": "Cliente Destinatário LTDA",
+                      "nomeFantasia": "Destinatário Comércio",
+                      "inscricaoEstadual": "987.654.321.098",
+                      "telefone": "(11) 91234-5678",
+                      "telefone2": null,
+                      "email": "contato@destinatario.com.br",
+                      "tipo": 1,
+                      "endereco": {
+                        "logradouro": "Avenida Paulista",
+                        "numero": "1000",
+                        "complemento": "Apto 45",
+                        "bairro": "Bela Vista",
+                        "codigoMunicipio": "3550308",
+                        "nomeMunicipio": "São Paulo",
+                        "sigaUF": "SP",
+                        "cep": "01310-100",
+                        "latitude": -23.5613991,
+                        "longitude": -46.6565712,
+                        "altitude": 780.0,
+                        "preencherLatLng": true
+                      }
+                    },
+                    "remetente": {
+                      "idExterno": "REM-001",
+                      "cpf": null,
+                      "cnpj": "98.765.432/0001-10",
+                      "razaoSocial": "Remetente Transportes LTDA",
+                      "nomeFantasia": "Remetente Log",
+                      "inscricaoEstadual": "111.222.333.444",
+                      "telefone": "(11) 91111-2222",
+                      "telefone2": null,
+                      "email": "contato@remetente.com.br",
+                      "tipo": 4,
+                      "endereco": {
+                        "logradouro": "Rua dos Remetentes",
+                        "numero": "500",
+                        "complemento": null,
+                        "bairro": "Vila Remetente",
+                        "codigoMunicipio": "3550308",
+                        "nomeMunicipio": "São Paulo",
+                        "sigaUF": "SP",
+                        "cep": "02000-000",
+                        "latitude": -23.5000000,
+                        "longitude": -46.6000000,
+                        "altitude": 750.0,
+                        "preencherLatLng": true
+                      }
+                    },
+                    "recebedor": {
+                      "idExterno": "REC-001",
+                      "cpf": "987.654.321-00",
+                      "cnpj": null,
+                      "razaoSocial": "Recebedor Final LTDA",
+                      "nomeFantasia": "Recebedor Comércio",
+                      "inscricaoEstadual": "555.666.777.888",
+                      "telefone": "(11) 93333-4444",
+                      "telefone2": null,
+                      "email": "contato@recebedor.com.br",
+                      "tipo": 5,
+                      "endereco": {
+                        "logradouro": "Rua dos Recebedores",
+                        "numero": "750",
+                        "complemento": "Galpão 2",
+                        "bairro": "Distrito Industrial",
+                        "codigoMunicipio": "3550308",
+                        "nomeMunicipio": "São Paulo",
+                        "sigaUF": "SP",
+                        "cep": "03000-000",
+                        "latitude": -23.5500000,
+                        "longitude": -46.6500000,
+                        "altitude": 770.0,
+                        "preencherLatLng": true
+                      }
+                    },
+                    "total": {
+                      "valor": 1000.00,
+                      "valorFrete": 50.00,
+                      "valorDesconto": 100.00,
+                      "valorOutros": 25.00,
+                      "valorTotal": 975.00
+                    },
+                    "enderecoEntrega": {
+                      "logradouro": "Rua de Entrega",
+                      "numero": "999",
+                      "complemento": "Portão 3",
+                      "bairro": "Bairro Entrega",
+                      "codigoMunicipio": "3550308",
+                      "nomeMunicipio": "São Paulo",
+                      "sigaUF": "SP",
+                      "cep": "04000-000",
+                      "latitude": -23.5600000,
+                      "longitude": -46.6400000,
+                      "altitude": 775.0,
+                      "preencherLatLng": true
+                    },
+                    "produtosServicos": [
+                      {
+                        "quantidade": 10.0,
+                        "valorUnitario": 50.00,
+                        "valorTotalBruto": 500.00,
+                        "valorDesconto": 25.00,
+                        "valorEntraValorTotal": 1,
+                        "produtoServico": {
+                          "codigoProdutoServico": "PROD-001",
+                          "codigoBarra": "7891234567890",
+                          "descricao": "Produto Exemplo 1",
+                          "codigoNcm": "1234.56.78",
+                          "unidadeComercial": "UN"
+                        }
+                      },
+                      {
+                        "quantidade": 5.0,
+                        "valorUnitario": 100.00,
+                        "valorTotalBruto": 500.00,
+                        "valorDesconto": 50.00,
+                        "valorEntraValorTotal": 1,
+                        "produtoServico": {
+                          "codigoProdutoServico": "PROD-002",
+                          "codigoBarra": "7891234567891",
+                          "descricao": "Produto Exemplo 2",
+                          "codigoNcm": "2345.67.89",
+                          "unidadeComercial": "KG"
+                        }
+                      }
+                    ],
+                    "vendedorDescricao": "Vendedor João",
+                    "localEntregaDescricao": "Loja Principal - Centro"
+                  }
+                },
                 "Exemplo 1 - NF Básica": {
                   "value": {
                     "chave": "48784564894456165789531657981",
