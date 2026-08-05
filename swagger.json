@@ -1,1959 +1,1960 @@
 {
-  "openapi": "3.0.1", 
-  "info": {
-    "title": "Grafos Tech - Importação de NF e Pedido",
-    "version": "v1",
-    "description": "Passo a passo para realizar o envio de uma NF / Pedido:<br/><br/> 1 - Utilizando o server URL Microservices, faça a requisição na /api/Backend e armazene a URL retornada para uso posterior. (Obs: Sugerimos realizar essa requisição uma vez ao dia pois a URL retornada pode ser alterada.) <br/> 2 - Com a URL do passo anterior em mãos, faça a requisição de login e armezene o token retornado.(Obs: Esse token expira sempre após a meia noite.)<br/> 3 - Realize a importação da NF / Pedido utilizando o token nos headers da requisição com a palavra bearer antes do mesmo (Exemplo: Bearer u797ihf65898sd7841d7sfsdf)<br/><br/> Opção 1: /api/NotaFiscal para os casos onde o XML do NFe ou CTe.<br/> Opção 2: /api/NotaFiscal/Import para os casos de importação de NF / Pedido (Via JSON) <br/><br/><br/> E-mail para suporte: contato@grafostech.com.br <br/> Telefone: (47) 98920-0000 (Whatsapp)  <br/><br/> Observação: Caso não possua um usuário e senha para acesso, solicitar a criação para o cliente ou para o suporte Grafos Tech."
-  },
-  "servers": [
-    {
-      "url": "https://container-app-prod-ms-backend.proudsand-a95781db.eastus.azurecontainerapps.io",
-      "description": "Prod"
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Grafos Tech - Importação de NF e Pedido",
+        "version": "v1",
+        "description": "Passo a passo para realizar o envio de uma NF / Pedido:<br/><br/> 1 - Utilizando o server URL Microservices, faça a requisição na /api/Backend e armazene a URL retornada para uso posterior. (Obs: Sugerimos realizar essa requisição uma vez ao dia pois a URL retornada pode ser alterada.) <br/> 2 - Com a URL do passo anterior em mãos, faça a requisição de login e armezene o token retornado.(Obs: Esse token expira sempre após a meia noite.)<br/> 3 - Realize a importação da NF / Pedido utilizando o token nos headers da requisição com a palavra bearer antes do mesmo (Exemplo: Bearer u797ihf65898sd7841d7sfsdf)<br/><br/> Opção 1: /api/NotaFiscal para os casos onde o XML do NFe ou CTe.<br/> Opção 2: /api/NotaFiscal/Import para os casos de importação de NF / Pedido (Via JSON) <br/><br/><br/> E-mail para suporte: contato@grafostech.com.br <br/> Telefone: (47) 98920-0000 (Whatsapp)  <br/><br/> Observação: Caso não possua um usuário e senha para acesso, solicitar a criação para o cliente ou para o suporte Grafos Tech."
     },
-    {
-      "url": "https://api.grafostech.com.br",
-      "description": "Url Microservices"
-    }
-  ],
-  "paths": {
-    "/api/Backend": {
-      "get": {
-        "tags": [
-          "Microservices"
-        ],
-        "summary": "Pega a URL do Backend para realizar as outras operações.",
-        "description": "Este endpoint é utilizado para retornar a URL sempre atualizada do backend para que o mesmo possa ser usado nas operaçõs seguintes. Indicamos atualizar a URL do backend uma vez por dia.<br/><br/>Indicamos sempre usar a URL (https://api.grafostech.com.br) neste endpoint.",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UrlBackend"
-                }
-              }
-            }
-          }
+    "servers": [
+        {
+            "url": "https://container-app-prod-ms-backend.proudsand-a95781db.eastus.azurecontainerapps.io",
+            "description": "Prod"
+        },
+        {
+            "url": "https://api.grafostech.com.br",
+            "description": "Url Microservices"
         }
-      }
+    ],
+    "paths": {
+        "/api/Backend": {
+            "get": {
+                "tags": [
+                    "Microservices"
+                ],
+                "summary": "Pega a URL do Backend para realizar as outras operações.",
+                "description": "Este endpoint é utilizado para retornar a URL sempre atualizada do backend para que o mesmo possa ser usado nas operaçõs seguintes. Indicamos atualizar a URL do backend uma vez por dia.<br/><br/>Indicamos sempre usar a URL (https://api.grafostech.com.br) neste endpoint.",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UrlBackend"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/NotaFiscal": {
+            "post": {
+                "tags": [
+                    "NotaFiscal"
+                ],
+                "summary": "Posta uma nota fiscal para registro baseado pelo xml completo em string.",
+                "description": "No campo xml é necessário o arquivo xml convertido para string. Atenção na conversão das aspas duplas (\"\"). É aceito apenas xml de NFe e de CTe.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Monitoramento_Backend.NFe_Dto.XMLDto"
+                            },
+                            "examples": {
+                                "Exemplo 1 - Conversão aspas \"": {
+                                    "value": {
+                                        "xml": "<nfeProc versao=\"4.00\" xmlns=\"http://www.portalfiscal.inf.br/nfe\"> <NFe xmlns=\"http://www.portalfiscal.inf.br/nfe\"> </NFe> </nfeProc>"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "text/plain": {
+                                "example": "Mensagem de retorno"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Erro",
+                        "content": {
+                            "text/plain": {
+                                "example": "Mensagem de retorno"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/NotaFiscal/Import": {
+            "post": {
+                "tags": [
+                    "NotaFiscal"
+                ],
+                "summary": "Posta uma nota fiscal/pedido para registro baseado no modelo preenchido.",
+                "description": "Endpoint utilizado para importar nota fiscal / pedido (conforme desejo do cliente). <br/><br/> Atenção nos campos chave, idExterno e número do documento fiscal, pois esses campos são usados para verificar se o pedido ou NF já está cadastrado no sistema ou não, sendo assim, caso seja enviado o mesmo idExterno, chave ou número do documento fiscal, o registro será desconsiderado.<br/><br/> Exemplo 0 - Exemplo completo com todas as informações possíveis no requestBody.<br/><br/> Exemplo 1 - NF apenas com informações básicas, necessário chave e número do documento. (Nessa opção o endereço de entrega é considerado o endereço do destinatário). <br/><br/> Exemplo 2 - NF básica com a adição de valores e produtos. <br/><br/> Exemplo 3 - NF com produtos com a adição de peso e volume. <br/><br/> Exemplo 4 - Nesse exemplo, o endereço de entrega será considerado efetivamente o objeto que está no campo \"enderecoEntrega\" e não o endereço do destinatário. Desse modo, o destinatário pode possuir um endereço de entrega diferente do endereço de seu cadastro. <br/><br/> Exemplo 5 - Pedido: Segue os mesmos padrões de NF, porém com em vez de serem utilizados os campos chave e número do documento, deve ser utilizado o idExterno (Esse id pode ser o mesmo do sistema ERP, porém, caso o sistema repita ids, será realizado o update, não recomendamos esse método caso ocorra a repetição dos ids como citado anteriormente / No modo de pedido também é possível adicionar peso, volume, produtos e total, bem como endereço de entrega confome os exemplos acima). <br/><br/> Exemplo 6 - Neste exemplo o campo placa é passado como parâmetro e o sistema a levará em consideração para separar as NFs entre os veículos (Placas). <br/> Obs: As placas precisam estar cadastradas no sistema Grafos Tech para terem validade. <br/><br/> Exemplo 7 - Neste exemplo o campo IdExternoRota é passa do como parametro, e o sistema levará em consideração a rota para separar as NFs, caso não encontre nenhuma rota com o IdExterno enviado a NF será adicionada seguindo o fluxo normal. Caso a NF já esteja em uma rota, basta passar outro IdExternoRota com a mesma Chave/IdExterno/NumeroDocumento para a NF ser transferida para outra rota.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Monitoramento_Backend.Models.NotaFiscal"
+                            },
+                            "examples": {
+                                "Exemplo 0 - NF Completa": {
+                                    "value": {
+                                        "chave": "35210712345678901234567890123456-uli2",
+                                        "idExterno": "NF-2024-001234-uli2",
+                                        "naturezaOperacao": "VENDA",
+                                        "numeroDocumentoFiscal": "123456-uli2",
+                                        "dataEmissao": "2024-01-15T10:30:00",
+                                        "dataSaidaEntrada": "2024-01-15T14:00:00",
+                                        "tipoOperacao": 0,
+                                        "finalidadeEmissao": 1,
+                                        "informacaoAdicionalFisco": "Informações adicionais para o fisco",
+                                        "informacaoComplementar": "Informações complementares da nota fiscal",
+                                        "placa": "ABC-1234",
+                                        "veiculoCodigoExterno": "VEI-001",
+                                        "formaPagamento": "Boleto",
+                                        "especie": "Nota Fiscal Eletrônica",
+                                        "cfop": "5102",
+                                        "codUltimaOcorrencia": "100",
+                                        "descricaoUltimaOcorrencia": "Autorizado o uso da NF-e",
+                                        "dataProgramada": "2024-01-20T08:00:00",
+                                        "previsaoEntrega": "2024-01-20T17:00:00",
+                                        "agendamentoTransportadora": "2024-01-19T10:00:00",
+                                        "setorEntrega": "Setor Norte",
+                                        "transportadoraDocumento": "12.345.678/0001-90",
+                                        "adicionarDocEmRota": true,
+                                        "motoristaNome": "João Silva",
+                                        "rotaRegiaoNome": "Região Metropolitana",
+                                        "localInicioDescricao": "Centro de Distribuição",
+                                        "localFimDescricao": "Cliente Final",
+                                        "agendamentoInicio": "2024-01-20T08:00:00",
+                                        "agendamentoFim": "2024-01-20T18:00:00",
+                                        "tipoDocumento": 0,
+                                        "tipoAgendamento": 1,
+                                        "pesoBruto": 150.5,
+                                        "pesoLiquido": 140.25,
+                                        "pesoCalculado": 145.0,
+                                        "cubagem": 2.5,
+                                        "quantidadePares": 10,
+                                        "quantidadeVolume": 5,
+                                        "idExternoRota": "IXL7G71-20251217-23",
+                                        "emitente": {
+                                            "idExterno": "EMI-001",
+                                            "cpf": null,
+                                            "cnpj": "12.345.678/0001-90",
+                                            "razaoSocial": "Empresa Emitente LTDA",
+                                            "nomeFantasia": "Emitente Comércio",
+                                            "inscricaoEstadual": "123.456.789.012",
+                                            "telefone": "(11) 98765-4321",
+                                            "telefone2": "(11) 98765-4322",
+                                            "email": "contato@emitente.com.br",
+                                            "tipo": 2,
+                                            "endereco": {
+                                                "logradouro": "Rua das Flores",
+                                                "numero": "123",
+                                                "complemento": "Sala 101",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "3550308",
+                                                "nomeMunicipio": "São Paulo",
+                                                "sigaUF": "SP",
+                                                "cep": "01234-567",
+                                                "latitude": -23.5505199,
+                                                "longitude": -46.6333094,
+                                                "altitude": 760.0,
+                                                "preencherLatLng": true
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "idExterno": "DES-001",
+                                            "cpf": "123.456.789-00",
+                                            "cnpj": null,
+                                            "razaoSocial": "Cliente Destinatário LTDA",
+                                            "nomeFantasia": "Destinatário Comércio",
+                                            "inscricaoEstadual": "987.654.321.098",
+                                            "observacaoLogistica": "Colocar informações que vão aparecer apenas para quem cria a rota do motorista",
+                                            "observacaoMotorista": "Colocar informações que vão aparecer apenas para o motorista",
+                                            "telefone": "(11) 91234-5678",
+                                            "telefone2": null,
+                                            "email": "contato@destinatario.com.br",
+                                            "tipo": 1,
+                                            "endereco": {
+                                                "logradouro": "Avenida Paulista",
+                                                "numero": "1000",
+                                                "complemento": "Apto 45",
+                                                "bairro": "Bela Vista",
+                                                "codigoMunicipio": "3550308",
+                                                "nomeMunicipio": "São Paulo",
+                                                "sigaUF": "SP",
+                                                "cep": "01310-100",
+                                                "latitude": -23.5613991,
+                                                "longitude": -46.6565712,
+                                                "altitude": 780.0,
+                                                "preencherLatLng": true
+                                            },
+                                            "Janelas": [
+                                                {
+                                                    "Inicio": "2000-01-01T06:00:00.000Z",
+                                                    "Fim": "2000-01-01T15:00:00.000Z",
+                                                    "DiaDaSemana": "1"
+                                                },
+                                                {
+                                                    "Inicio": "2000-01-01T06:00:00.000Z",
+                                                    "Fim": "2000-01-01T15:00:00.000Z",
+                                                    "DiaDaSemana": "2"
+                                                },
+                                                {
+                                                    "Inicio": "2000-01-01T06:00:00.000Z",
+                                                    "Fim": "2000-01-01T15:00:00.000Z",
+                                                    "DiaDaSemana": "3"
+                                                },
+                                                {
+                                                    "Inicio": "2000-01-01T06:00:00.000Z",
+                                                    "Fim": "2000-01-01T15:00:00.000Z",
+                                                    "DiaDaSemana": "4"
+                                                },
+                                                {
+                                                    "Inicio": "2000-01-01T06:00:00.000Z",
+                                                    "Fim": "2000-01-01T15:00:00.000Z",
+                                                    "DiaDaSemana": "5"
+                                                },
+                                                {
+                                                    "Inicio": "2000-01-01T06:00:00.000Z",
+                                                    "Fim": "2000-01-01T10:00:00.000Z",
+                                                    "DiaDaSemana": "6"
+                                                }
+                                            ]
+                                        },
+                                        "remetente": {
+                                            "idExterno": "REM-001",
+                                            "cpf": null,
+                                            "cnpj": "98.765.432/0001-10",
+                                            "razaoSocial": "Remetente Transportes LTDA",
+                                            "nomeFantasia": "Remetente Log",
+                                            "inscricaoEstadual": "111.222.333.444",
+                                            "telefone": "(11) 91111-2222",
+                                            "telefone2": null,
+                                            "email": "contato@remetente.com.br",
+                                            "tipo": 4,
+                                            "endereco": {
+                                                "logradouro": "Rua dos Remetentes",
+                                                "numero": "500",
+                                                "complemento": null,
+                                                "bairro": "Vila Remetente",
+                                                "codigoMunicipio": "3550308",
+                                                "nomeMunicipio": "São Paulo",
+                                                "sigaUF": "SP",
+                                                "cep": "02000-000",
+                                                "latitude": -23.5,
+                                                "longitude": -46.6,
+                                                "altitude": 750.0,
+                                                "preencherLatLng": true
+                                            }
+                                        },
+                                        "recebedor": {
+                                            "idExterno": "REC-001",
+                                            "cpf": "987.654.321-00",
+                                            "cnpj": null,
+                                            "razaoSocial": "Recebedor Final LTDA",
+                                            "nomeFantasia": "Recebedor Comércio",
+                                            "inscricaoEstadual": "555.666.777.888",
+                                            "telefone": "(11) 93333-4444",
+                                            "telefone2": null,
+                                            "email": "contato@recebedor.com.br",
+                                            "tipo": 5,
+                                            "endereco": {
+                                                "logradouro": "Rua dos Recebedores",
+                                                "numero": "750",
+                                                "complemento": "Galpão 2",
+                                                "bairro": "Distrito Industrial",
+                                                "codigoMunicipio": "3550308",
+                                                "nomeMunicipio": "São Paulo",
+                                                "sigaUF": "SP",
+                                                "cep": "03000-000",
+                                                "latitude": -23.55,
+                                                "longitude": -46.65,
+                                                "altitude": 770.0,
+                                                "preencherLatLng": true
+                                            }
+                                        },
+                                        "total": {
+                                            "valor": 1000.0,
+                                            "valorFrete": 50.0,
+                                            "valorDesconto": 100.0,
+                                            "valorOutros": 25.0,
+                                            "valorTotal": 975.0
+                                        },
+                                        "enderecoEntrega": {
+                                            "logradouro": "Rua de Entrega",
+                                            "numero": "999",
+                                            "complemento": "Portão 3",
+                                            "bairro": "Bairro Entrega",
+                                            "codigoMunicipio": "3550308",
+                                            "nomeMunicipio": "São Paulo",
+                                            "sigaUF": "SP",
+                                            "cep": "04000-000",
+                                            "latitude": -23.56,
+                                            "longitude": -46.64,
+                                            "altitude": 775.0,
+                                            "preencherLatLng": true
+                                        },
+                                        "produtosServicos": [
+                                            {
+                                                "quantidade": 10.0,
+                                                "valorUnitario": 50.0,
+                                                "valorTotalBruto": 500.0,
+                                                "valorDesconto": 25.0,
+                                                "valorEntraValorTotal": 1,
+                                                "produtoServico": {
+                                                    "codigoProdutoServico": "PROD-001",
+                                                    "codigoBarra": "7891234567890",
+                                                    "descricao": "Produto Exemplo 1",
+                                                    "codigoNcm": "1234.56.78",
+                                                    "unidadeComercial": "UN"
+                                                }
+                                            },
+                                            {
+                                                "quantidade": 5.0,
+                                                "valorUnitario": 100.0,
+                                                "valorTotalBruto": 500.0,
+                                                "valorDesconto": 50.0,
+                                                "valorEntraValorTotal": 1,
+                                                "produtoServico": {
+                                                    "codigoProdutoServico": "PROD-002",
+                                                    "codigoBarra": "7891234567891",
+                                                    "descricao": "Produto Exemplo 2",
+                                                    "codigoNcm": "2345.67.89",
+                                                    "unidadeComercial": "KG"
+                                                }
+                                            }
+                                        ],
+                                        "vendedorDescricao": "Vendedor João",
+                                        "localEntregaDescricao": "Loja Principal - Centro"
+                                    }
+                                },
+                                "Exemplo 1 - NF Básica": {
+                                    "value": {
+                                        "chave": "48784564894456165789531657981",
+                                        "numeroDocumentoFiscal": "98765432101234567",
+                                        "dataEmissao": "2023-08-15T12:30:45.678Z",
+                                        "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                                        "emitente": {
+                                            "cnpj": "09876543210987",
+                                            "razaoSocial": "Stark Industries",
+                                            "nomeFantasia": "Stark",
+                                            "endereco": {
+                                                "logradouro": "Avenida Tony Stark",
+                                                "numero": "123",
+                                                "complemento": "Torre Stark",
+                                                "bairro": "Malibu",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Los Angeles",
+                                                "sigaUF": "CA",
+                                                "cep": "90210"
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "cpf": "36497824596",
+                                            "razaoSocial": "Steve Rogers",
+                                            "nomeFantasia": "Steve Rogers",
+                                            "endereco": {
+                                                "logradouro": "Rua dos idosos",
+                                                "numero": "456",
+                                                "complemento": "Sala 42",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Nova York",
+                                                "sigaUF": "NY",
+                                                "cep": "13578456"
+                                            }
+                                        }
+                                    }
+                                },
+                                "Exemplo 2 - NF com produtos": {
+                                    "value": {
+                                        "chave": "48784564894456165789531657981",
+                                        "numeroDocumentoFiscal": "98765432101234567",
+                                        "dataEmissao": "2023-08-15T12:30:45.678Z",
+                                        "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                                        "emitente": {
+                                            "cnpj": "09876543210987",
+                                            "razaoSocial": "Stark Industries",
+                                            "nomeFantasia": "Stark",
+                                            "endereco": {
+                                                "logradouro": "Avenida Tony Stark",
+                                                "numero": "123",
+                                                "complemento": "Torre Stark",
+                                                "bairro": "Malibu",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Los Angeles",
+                                                "sigaUF": "CA",
+                                                "cep": "90210"
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "cpf": "36497824596",
+                                            "razaoSocial": "Steve Rogers",
+                                            "nomeFantasia": "Steve Rogers",
+                                            "endereco": {
+                                                "logradouro": "Rua dos idosos",
+                                                "numero": "456",
+                                                "complemento": "Sala 42",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Nova York",
+                                                "sigaUF": "NY",
+                                                "cep": "13578456"
+                                            }
+                                        },
+                                        "total": {
+                                            "valor": 1500,
+                                            "valorFrete": 50,
+                                            "valorDesconto": 100,
+                                            "valorOutros": 20,
+                                            "valorTotal": 1470
+                                        },
+                                        "produtosServicos": [
+                                            {
+                                                "quantidade": 1,
+                                                "valorUnitario": 500,
+                                                "valorTotalBruto": 500,
+                                                "valorDesconto": 50,
+                                                "valorEntraValorTotal": 450,
+                                                "produtoServico": {
+                                                    "codigoProdutoServico": "001",
+                                                    "codigoBarra": "1234567890123",
+                                                    "descricao": "Escudo de Vibranium",
+                                                    "codigoNcm": "98765432",
+                                                    "unidadeComercial": "un"
+                                                }
+                                            },
+                                            {
+                                                "quantidade": 2,
+                                                "valorUnitario": 600,
+                                                "valorTotalBruto": 1200,
+                                                "valorDesconto": 50,
+                                                "valorEntraValorTotal": 1150,
+                                                "produtoServico": {
+                                                    "codigoProdutoServico": "002",
+                                                    "codigoBarra": "9876543210987",
+                                                    "descricao": "Armadura Mark XLVII",
+                                                    "codigoNcm": "87654321",
+                                                    "unidadeComercial": "un"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "Exemplo 3 - NF com produtos + peso e volume": {
+                                    "value": {
+                                        "chave": "48784564894456165789531657981",
+                                        "numeroDocumentoFiscal": "98765432101234567",
+                                        "dataEmissao": "2023-08-15T12:30:45.678Z",
+                                        "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                                        "pesoBruto": 15.5,
+                                        "pesoLiquido": 13.8,
+                                        "quantidadeVolume": 2,
+                                        "especie": "caixas",
+                                        "emitente": {
+                                            "cnpj": "09876543210987",
+                                            "razaoSocial": "Stark Industries",
+                                            "nomeFantasia": "Stark",
+                                            "endereco": {
+                                                "logradouro": "Avenida Tony Stark",
+                                                "numero": "123",
+                                                "complemento": "Torre Stark",
+                                                "bairro": "Malibu",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Los Angeles",
+                                                "sigaUF": "CA",
+                                                "cep": "90210"
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "cpf": "36497824596",
+                                            "razaoSocial": "Steve Rogers",
+                                            "nomeFantasia": "Steve Rogers",
+                                            "endereco": {
+                                                "logradouro": "Rua dos idosos",
+                                                "numero": "456",
+                                                "complemento": "Sala 42",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Nova York",
+                                                "sigaUF": "NY",
+                                                "cep": "13578456"
+                                            }
+                                        },
+                                        "total": {
+                                            "valor": 1500,
+                                            "valorFrete": 50,
+                                            "valorDesconto": 100,
+                                            "valorOutros": 20,
+                                            "valorTotal": 1470
+                                        },
+                                        "produtosServicos": [
+                                            {
+                                                "quantidade": 1,
+                                                "valorUnitario": 500,
+                                                "valorTotalBruto": 500,
+                                                "valorDesconto": 50,
+                                                "valorEntraValorTotal": 450,
+                                                "produtoServico": {
+                                                    "codigoProdutoServico": "001",
+                                                    "codigoBarra": "1234567890123",
+                                                    "descricao": "Escudo de Vibranium",
+                                                    "codigoNcm": "98765432",
+                                                    "unidadeComercial": "un"
+                                                }
+                                            },
+                                            {
+                                                "quantidade": 2,
+                                                "valorUnitario": 600,
+                                                "valorTotalBruto": 1200,
+                                                "valorDesconto": 50,
+                                                "valorEntraValorTotal": 1150,
+                                                "produtoServico": {
+                                                    "codigoProdutoServico": "002",
+                                                    "codigoBarra": "9876543210987",
+                                                    "descricao": "Armadura Mark XLVII",
+                                                    "codigoNcm": "87654321",
+                                                    "unidadeComercial": "un"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "Exemplo 4 - NF Básica com endereço de entrega diferente do endereço de cadastro do destinatário": {
+                                    "value": {
+                                        "chave": "48784564894456165789531657981",
+                                        "numeroDocumentoFiscal": "98765432101234567",
+                                        "dataEmissao": "2023-08-15T12:30:45.678Z",
+                                        "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                                        "emitente": {
+                                            "cnpj": "09876543210987",
+                                            "razaoSocial": "Stark Industries",
+                                            "nomeFantasia": "Stark",
+                                            "endereco": {
+                                                "logradouro": "Avenida Tony Stark",
+                                                "numero": "123",
+                                                "complemento": "Torre Stark",
+                                                "bairro": "Malibu",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Los Angeles",
+                                                "sigaUF": "CA",
+                                                "cep": "90210"
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "cpf": "36497824596",
+                                            "razaoSocial": "Steve Rogers",
+                                            "nomeFantasia": "Steve Rogers",
+                                            "endereco": {
+                                                "logradouro": "Rua dos idosos",
+                                                "numero": "456",
+                                                "complemento": "Sala 42",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Nova York",
+                                                "sigaUF": "NY",
+                                                "cep": "13578456"
+                                            }
+                                        },
+                                        "enderecoEntrega": {
+                                            "logradouro": "Rua das Ilusões",
+                                            "numero": "789",
+                                            "complemento": "Bloco C",
+                                            "bairro": "Fantasia",
+                                            "codigoMunicipio": "",
+                                            "nomeMunicipio": "Cidade dos Sonhos",
+                                            "sigaUF": "FS",
+                                            "cep": "54321000"
+                                        }
+                                    }
+                                },
+                                "Exemplo 5 - Pedido": {
+                                    "value": {
+                                        "idExterno": "78933654",
+                                        "dataEmissao": "2023-08-15T12:30:45.678Z",
+                                        "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                                        "emitente": {
+                                            "cnpj": "09876543210987",
+                                            "razaoSocial": "Stark Industries",
+                                            "nomeFantasia": "Stark",
+                                            "endereco": {
+                                                "logradouro": "Avenida Tony Stark",
+                                                "numero": "123",
+                                                "complemento": "Torre Stark",
+                                                "bairro": "Malibu",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Los Angeles",
+                                                "sigaUF": "CA",
+                                                "cep": "90210"
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "cpf": "36497824596",
+                                            "razaoSocial": "Steve Rogers",
+                                            "nomeFantasia": "Steve Rogers",
+                                            "endereco": {
+                                                "logradouro": "Rua dos idosos",
+                                                "numero": "456",
+                                                "complemento": "Sala 42",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Nova York",
+                                                "sigaUF": "NY",
+                                                "cep": "13578456"
+                                            }
+                                        }
+                                    }
+                                },
+                                "Exemplo 6 - NF com veículo definido": {
+                                    "value": {
+                                        "chave": "48784564894456165789531657981",
+                                        "numeroDocumentoFiscal": "98765432101234567",
+                                        "dataEmissao": "2023-08-15T12:30:45.678Z",
+                                        "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                                        "placa": "MIO0103",
+                                        "emitente": {
+                                            "cnpj": "09876543210987",
+                                            "razaoSocial": "Stark Industries",
+                                            "nomeFantasia": "Stark",
+                                            "endereco": {
+                                                "logradouro": "Avenida Tony Stark",
+                                                "numero": "123",
+                                                "complemento": "Torre Stark",
+                                                "bairro": "Malibu",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Los Angeles",
+                                                "sigaUF": "CA",
+                                                "cep": "90210"
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "cpf": "36497824596",
+                                            "razaoSocial": "Steve Rogers",
+                                            "nomeFantasia": "Steve Rogers",
+                                            "endereco": {
+                                                "logradouro": "Rua dos idosos",
+                                                "numero": "456",
+                                                "complemento": "Sala 42",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Nova York",
+                                                "sigaUF": "NY",
+                                                "cep": "13578456"
+                                            }
+                                        }
+                                    }
+                                },
+                                "Exemplo 7 - NF com IdExterno da Rota": {
+                                    "value": {
+                                        "chave": "48784564894456165789531657981",
+                                        "numeroDocumentoFiscal": "98765432101234567",
+                                        "dataEmissao": "2023-08-15T12:30:45.678Z",
+                                        "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                                        "motoristaNome": "João da Silva",
+                                        "rotaRegiaoNome": "Região sul do estado",
+                                        "idExternoRota": "55893",
+                                        "emitente": {
+                                            "cnpj": "09876543210987",
+                                            "razaoSocial": "Stark Industries",
+                                            "nomeFantasia": "Stark",
+                                            "endereco": {
+                                                "logradouro": "Avenida Tony Stark",
+                                                "numero": "123",
+                                                "complemento": "Torre Stark",
+                                                "bairro": "Malibu",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Los Angeles",
+                                                "sigaUF": "CA",
+                                                "cep": "90210"
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "cpf": "36497824596",
+                                            "razaoSocial": "Steve Rogers",
+                                            "nomeFantasia": "Steve Rogers",
+                                            "endereco": {
+                                                "logradouro": "Rua dos idosos",
+                                                "numero": "456",
+                                                "complemento": "Sala 42",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Nova York",
+                                                "sigaUF": "NY",
+                                                "cep": "13578456"
+                                            }
+                                        }
+                                    }
+                                },
+                                "Exemplo 8 - NF com IdExterno da Rota, motorista e placa": {
+                                    "value": {
+                                        "chave": "48784564894456165789531657981",
+                                        "numeroDocumentoFiscal": "98765432101234567",
+                                        "dataEmissao": "2023-08-15T12:30:45.678Z",
+                                        "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                                        "idExternoRota": "55893",
+                                        "placa": "MMM0001",
+                                        "motoristaNome": "Joao da Silva",
+                                        "emitente": {
+                                            "cnpj": "09876543210987",
+                                            "razaoSocial": "Stark Industries",
+                                            "nomeFantasia": "Stark",
+                                            "endereco": {
+                                                "logradouro": "Avenida Tony Stark",
+                                                "numero": "123",
+                                                "complemento": "Torre Stark",
+                                                "bairro": "Malibu",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Los Angeles",
+                                                "sigaUF": "CA",
+                                                "cep": "90210"
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "cpf": "36497824596",
+                                            "razaoSocial": "Steve Rogers",
+                                            "nomeFantasia": "Steve Rogers",
+                                            "endereco": {
+                                                "logradouro": "Rua dos idosos",
+                                                "numero": "456",
+                                                "complemento": "Sala 42",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Nova York",
+                                                "sigaUF": "NY",
+                                                "cep": "13578456"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "text/plain": {
+                                "example": "Mensagem de retorno"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Erro",
+                        "content": {
+                            "text/plain": {
+                                "example": "Mensagem de retorno"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/NotaFiscal/Import/v2": {
+            "post": {
+                "tags": [
+                    "NotaFiscal"
+                ],
+                "summary": "Posta uma nota fiscal/pedido para registro baseado no modelo preenchido.",
+                "description": "Endpoint utilizado para importar nota fiscal / pedido (conforme desejo do cliente). <br/><br/> Atenção nos campos chave, idExterno e número do documento fiscal, pois esses campos são usados para verificar se o pedido ou NF já está cadastrado no sistema ou não, sendo assim, caso seja enviado o mesmo idExterno, chave ou número do documento fiscal, o registro será desconsiderado.<br/><br/> Exemplo 0 - Exemplo completo com todas as informações possíveis no requestBody. <br/><br/> Exemplo 1 - NF apenas com informações básicas, necessário chave e número do documento. (Nessa opção o endereço de entrega é considerado o endereço do destinatário). <br/><br/> Exemplo 2 - NF básica com a adição de valores e produtos. <br/><br/> Exemplo 3 - NF com produtos com a adição de peso e volume. <br/><br/> Exemplo 4 - Nesse exemplo, o endereço de entrega será considerado efetivamente o objeto que está no campo \"enderecoEntrega\" e não o endereço do destinatário. Desse modo, o destinatário pode possuir um endereço de entrega diferente do endereço de seu cadastro. <br/><br/> Exemplo 5 - Pedido: Segue os mesmos padrões de NF, porém com em vez de serem utilizados os campos chave e número do documento, deve ser utilizado o idExterno (Esse id pode ser o mesmo do sistema ERP, porém, caso o sistema repita ids, será realizado o update, não recomendamos esse método caso ocorra a repetição dos ids como citado anteriormente / No modo de pedido também é possível adicionar peso, volume, produtos e total, bem como endereço de entrega confome os exemplos acima). <br/><br/> Exemplo 6 - Neste exemplo o campo placa é passado como parâmetro e o sistema a levará em consideração para separar as NFs entre os veículos (Placas). <br/> Obs: As placas precisam estar cadastradas no sistema Grafos Tech para terem validade. <br/><br/> Exemplo 7 - Neste exemplo o campo IdExternoRota é passa do como parametro, e o sistema levará em consideração a rota para separar as NFs, caso não encontre nenhuma rota com o IdExterno enviado a NF será adicionada seguindo o fluxo normal. Caso a NF já esteja em uma rota, basta passar outro IdExternoRota com a mesma Chave/IdExterno/NumeroDocumento para a NF ser transferida para outra rota.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Monitoramento_Backend.Models.NotaFiscal"
+                            },
+                            "examples": {
+                                "Exemplo 0 - NF Completa": {
+                                    "value": {
+                                        "chave": "35210712345678901234567890123456-uli2",
+                                        "idExterno": "NF-2024-001234-uli2",
+                                        "naturezaOperacao": "VENDA",
+                                        "numeroDocumentoFiscal": "123456-uli2",
+                                        "dataEmissao": "2024-01-15T10:30:00",
+                                        "dataSaidaEntrada": "2024-01-15T14:00:00",
+                                        "tipoOperacao": 0,
+                                        "finalidadeEmissao": 1,
+                                        "informacaoAdicionalFisco": "Informações adicionais para o fisco",
+                                        "informacaoComplementar": "Informações complementares da nota fiscal",
+                                        "placa": "ABC-1234",
+                                        "veiculoCodigoExterno": "VEI-001",
+                                        "formaPagamento": "Boleto",
+                                        "especie": "Nota Fiscal Eletrônica",
+                                        "cfop": "5102",
+                                        "codUltimaOcorrencia": "100",
+                                        "descricaoUltimaOcorrencia": "Autorizado o uso da NF-e",
+                                        "dataProgramada": "2024-01-20T08:00:00",
+                                        "previsaoEntrega": "2024-01-20T17:00:00",
+                                        "agendamentoTransportadora": "2024-01-19T10:00:00",
+                                        "setorEntrega": "Setor Norte",
+                                        "transportadoraDocumento": "12.345.678/0001-90",
+                                        "adicionarDocEmRota": true,
+                                        "motoristaNome": "João Silva",
+                                        "rotaRegiaoNome": "Região Metropolitana",
+                                        "localInicioDescricao": "Centro de Distribuição",
+                                        "localFimDescricao": "Cliente Final",
+                                        "agendamentoInicio": "2024-01-20T08:00:00",
+                                        "agendamentoFim": "2024-01-20T18:00:00",
+                                        "tipoDocumento": 0,
+                                        "tipoAgendamento": 1,
+                                        "pesoBruto": 150.5,
+                                        "pesoLiquido": 140.25,
+                                        "pesoCalculado": 145.0,
+                                        "cubagem": 2.5,
+                                        "quantidadePares": 10,
+                                        "quantidadeVolume": 5,
+                                        "idExternoRota": "IXL7G71-20251217-23",
+                                        "emitente": {
+                                            "idExterno": "EMI-001",
+                                            "cpf": null,
+                                            "cnpj": "12.345.678/0001-90",
+                                            "razaoSocial": "Empresa Emitente LTDA",
+                                            "nomeFantasia": "Emitente Comércio",
+                                            "inscricaoEstadual": "123.456.789.012",
+                                            "telefone": "(11) 98765-4321",
+                                            "telefone2": "(11) 98765-4322",
+                                            "email": "contato@emitente.com.br",
+                                            "tipo": 2,
+                                            "endereco": {
+                                                "logradouro": "Rua das Flores",
+                                                "numero": "123",
+                                                "complemento": "Sala 101",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "3550308",
+                                                "nomeMunicipio": "São Paulo",
+                                                "sigaUF": "SP",
+                                                "cep": "01234-567",
+                                                "latitude": -23.5505199,
+                                                "longitude": -46.6333094,
+                                                "altitude": 760.0,
+                                                "preencherLatLng": true
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "idExterno": "DES-001",
+                                            "cpf": "123.456.789-00",
+                                            "cnpj": null,
+                                            "razaoSocial": "Cliente Destinatário LTDA",
+                                            "nomeFantasia": "Destinatário Comércio",
+                                            "inscricaoEstadual": "987.654.321.098",
+                                            "telefone": "(11) 91234-5678",
+                                            "telefone2": null,
+                                            "email": "contato@destinatario.com.br",
+                                            "tipo": 1,
+                                            "endereco": {
+                                                "logradouro": "Avenida Paulista",
+                                                "numero": "1000",
+                                                "complemento": "Apto 45",
+                                                "bairro": "Bela Vista",
+                                                "codigoMunicipio": "3550308",
+                                                "nomeMunicipio": "São Paulo",
+                                                "sigaUF": "SP",
+                                                "cep": "01310-100",
+                                                "latitude": -23.5613991,
+                                                "longitude": -46.6565712,
+                                                "altitude": 780.0,
+                                                "preencherLatLng": true
+                                            }
+                                        },
+                                        "remetente": {
+                                            "idExterno": "REM-001",
+                                            "cpf": null,
+                                            "cnpj": "98.765.432/0001-10",
+                                            "razaoSocial": "Remetente Transportes LTDA",
+                                            "nomeFantasia": "Remetente Log",
+                                            "inscricaoEstadual": "111.222.333.444",
+                                            "telefone": "(11) 91111-2222",
+                                            "telefone2": null,
+                                            "email": "contato@remetente.com.br",
+                                            "tipo": 4,
+                                            "endereco": {
+                                                "logradouro": "Rua dos Remetentes",
+                                                "numero": "500",
+                                                "complemento": null,
+                                                "bairro": "Vila Remetente",
+                                                "codigoMunicipio": "3550308",
+                                                "nomeMunicipio": "São Paulo",
+                                                "sigaUF": "SP",
+                                                "cep": "02000-000",
+                                                "latitude": -23.5,
+                                                "longitude": -46.6,
+                                                "altitude": 750.0,
+                                                "preencherLatLng": true
+                                            }
+                                        },
+                                        "recebedor": {
+                                            "idExterno": "REC-001",
+                                            "cpf": "987.654.321-00",
+                                            "cnpj": null,
+                                            "razaoSocial": "Recebedor Final LTDA",
+                                            "nomeFantasia": "Recebedor Comércio",
+                                            "inscricaoEstadual": "555.666.777.888",
+                                            "telefone": "(11) 93333-4444",
+                                            "telefone2": null,
+                                            "email": "contato@recebedor.com.br",
+                                            "tipo": 5,
+                                            "endereco": {
+                                                "logradouro": "Rua dos Recebedores",
+                                                "numero": "750",
+                                                "complemento": "Galpão 2",
+                                                "bairro": "Distrito Industrial",
+                                                "codigoMunicipio": "3550308",
+                                                "nomeMunicipio": "São Paulo",
+                                                "sigaUF": "SP",
+                                                "cep": "03000-000",
+                                                "latitude": -23.55,
+                                                "longitude": -46.65,
+                                                "altitude": 770.0,
+                                                "preencherLatLng": true
+                                            }
+                                        },
+                                        "total": {
+                                            "valor": 1000.0,
+                                            "valorFrete": 50.0,
+                                            "valorDesconto": 100.0,
+                                            "valorOutros": 25.0,
+                                            "valorTotal": 975.0
+                                        },
+                                        "enderecoEntrega": {
+                                            "logradouro": "Rua de Entrega",
+                                            "numero": "999",
+                                            "complemento": "Portão 3",
+                                            "bairro": "Bairro Entrega",
+                                            "codigoMunicipio": "3550308",
+                                            "nomeMunicipio": "São Paulo",
+                                            "sigaUF": "SP",
+                                            "cep": "04000-000",
+                                            "latitude": -23.56,
+                                            "longitude": -46.64,
+                                            "altitude": 775.0,
+                                            "preencherLatLng": true
+                                        },
+                                        "produtosServicos": [
+                                            {
+                                                "quantidade": 10.0,
+                                                "valorUnitario": 50.0,
+                                                "valorTotalBruto": 500.0,
+                                                "valorDesconto": 25.0,
+                                                "valorEntraValorTotal": 1,
+                                                "produtoServico": {
+                                                    "codigoProdutoServico": "PROD-001",
+                                                    "codigoBarra": "7891234567890",
+                                                    "descricao": "Produto Exemplo 1",
+                                                    "codigoNcm": "1234.56.78",
+                                                    "unidadeComercial": "UN"
+                                                }
+                                            },
+                                            {
+                                                "quantidade": 5.0,
+                                                "valorUnitario": 100.0,
+                                                "valorTotalBruto": 500.0,
+                                                "valorDesconto": 50.0,
+                                                "valorEntraValorTotal": 1,
+                                                "produtoServico": {
+                                                    "codigoProdutoServico": "PROD-002",
+                                                    "codigoBarra": "7891234567891",
+                                                    "descricao": "Produto Exemplo 2",
+                                                    "codigoNcm": "2345.67.89",
+                                                    "unidadeComercial": "KG"
+                                                }
+                                            }
+                                        ],
+                                        "vendedorDescricao": "Vendedor João",
+                                        "localEntregaDescricao": "Loja Principal - Centro"
+                                    }
+                                },
+                                "Exemplo 1 - NF Básica": {
+                                    "value": {
+                                        "chave": "48784564894456165789531657981",
+                                        "numeroDocumentoFiscal": "98765432101234567",
+                                        "dataEmissao": "2023-08-15T12:30:45.678Z",
+                                        "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                                        "emitente": {
+                                            "cnpj": "09876543210987",
+                                            "razaoSocial": "Stark Industries",
+                                            "nomeFantasia": "Stark",
+                                            "endereco": {
+                                                "logradouro": "Avenida Tony Stark",
+                                                "numero": "123",
+                                                "complemento": "Torre Stark",
+                                                "bairro": "Malibu",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Los Angeles",
+                                                "sigaUF": "CA",
+                                                "cep": "90210"
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "cpf": "36497824596",
+                                            "razaoSocial": "Steve Rogers",
+                                            "nomeFantasia": "Steve Rogers",
+                                            "endereco": {
+                                                "logradouro": "Rua dos idosos",
+                                                "numero": "456",
+                                                "complemento": "Sala 42",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Nova York",
+                                                "sigaUF": "NY",
+                                                "cep": "13578456"
+                                            }
+                                        }
+                                    }
+                                },
+                                "Exemplo 2 - NF com produtos": {
+                                    "value": {
+                                        "chave": "48784564894456165789531657981",
+                                        "numeroDocumentoFiscal": "98765432101234567",
+                                        "dataEmissao": "2023-08-15T12:30:45.678Z",
+                                        "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                                        "emitente": {
+                                            "cnpj": "09876543210987",
+                                            "razaoSocial": "Stark Industries",
+                                            "nomeFantasia": "Stark",
+                                            "endereco": {
+                                                "logradouro": "Avenida Tony Stark",
+                                                "numero": "123",
+                                                "complemento": "Torre Stark",
+                                                "bairro": "Malibu",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Los Angeles",
+                                                "sigaUF": "CA",
+                                                "cep": "90210"
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "cpf": "36497824596",
+                                            "razaoSocial": "Steve Rogers",
+                                            "nomeFantasia": "Steve Rogers",
+                                            "endereco": {
+                                                "logradouro": "Rua dos idosos",
+                                                "numero": "456",
+                                                "complemento": "Sala 42",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Nova York",
+                                                "sigaUF": "NY",
+                                                "cep": "13578456"
+                                            }
+                                        },
+                                        "total": {
+                                            "valor": 1500,
+                                            "valorFrete": 50,
+                                            "valorDesconto": 100,
+                                            "valorOutros": 20,
+                                            "valorTotal": 1470
+                                        },
+                                        "produtosServicos": [
+                                            {
+                                                "quantidade": 1,
+                                                "valorUnitario": 500,
+                                                "valorTotalBruto": 500,
+                                                "valorDesconto": 50,
+                                                "valorEntraValorTotal": 450,
+                                                "produtoServico": {
+                                                    "codigoProdutoServico": "001",
+                                                    "codigoBarra": "1234567890123",
+                                                    "descricao": "Escudo de Vibranium",
+                                                    "codigoNcm": "98765432",
+                                                    "unidadeComercial": "un"
+                                                }
+                                            },
+                                            {
+                                                "quantidade": 2,
+                                                "valorUnitario": 600,
+                                                "valorTotalBruto": 1200,
+                                                "valorDesconto": 50,
+                                                "valorEntraValorTotal": 1150,
+                                                "produtoServico": {
+                                                    "codigoProdutoServico": "002",
+                                                    "codigoBarra": "9876543210987",
+                                                    "descricao": "Armadura Mark XLVII",
+                                                    "codigoNcm": "87654321",
+                                                    "unidadeComercial": "un"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "Exemplo 3 - NF com produtos + peso e volume": {
+                                    "value": {
+                                        "chave": "48784564894456165789531657981",
+                                        "numeroDocumentoFiscal": "98765432101234567",
+                                        "dataEmissao": "2023-08-15T12:30:45.678Z",
+                                        "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                                        "pesoBruto": 15.5,
+                                        "pesoLiquido": 13.8,
+                                        "quantidadeVolume": 2,
+                                        "especie": "caixas",
+                                        "emitente": {
+                                            "cnpj": "09876543210987",
+                                            "razaoSocial": "Stark Industries",
+                                            "nomeFantasia": "Stark",
+                                            "endereco": {
+                                                "logradouro": "Avenida Tony Stark",
+                                                "numero": "123",
+                                                "complemento": "Torre Stark",
+                                                "bairro": "Malibu",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Los Angeles",
+                                                "sigaUF": "CA",
+                                                "cep": "90210"
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "cpf": "36497824596",
+                                            "razaoSocial": "Steve Rogers",
+                                            "nomeFantasia": "Steve Rogers",
+                                            "endereco": {
+                                                "logradouro": "Rua dos idosos",
+                                                "numero": "456",
+                                                "complemento": "Sala 42",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Nova York",
+                                                "sigaUF": "NY",
+                                                "cep": "13578456"
+                                            }
+                                        },
+                                        "total": {
+                                            "valor": 1500,
+                                            "valorFrete": 50,
+                                            "valorDesconto": 100,
+                                            "valorOutros": 20,
+                                            "valorTotal": 1470
+                                        },
+                                        "produtosServicos": [
+                                            {
+                                                "quantidade": 1,
+                                                "valorUnitario": 500,
+                                                "valorTotalBruto": 500,
+                                                "valorDesconto": 50,
+                                                "valorEntraValorTotal": 450,
+                                                "produtoServico": {
+                                                    "codigoProdutoServico": "001",
+                                                    "codigoBarra": "1234567890123",
+                                                    "descricao": "Escudo de Vibranium",
+                                                    "codigoNcm": "98765432",
+                                                    "unidadeComercial": "un"
+                                                }
+                                            },
+                                            {
+                                                "quantidade": 2,
+                                                "valorUnitario": 600,
+                                                "valorTotalBruto": 1200,
+                                                "valorDesconto": 50,
+                                                "valorEntraValorTotal": 1150,
+                                                "produtoServico": {
+                                                    "codigoProdutoServico": "002",
+                                                    "codigoBarra": "9876543210987",
+                                                    "descricao": "Armadura Mark XLVII",
+                                                    "codigoNcm": "87654321",
+                                                    "unidadeComercial": "un"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "Exemplo 4 - NF Básica com endereço de entrega diferente do endereço de cadastro do destinatário": {
+                                    "value": {
+                                        "chave": "48784564894456165789531657981",
+                                        "numeroDocumentoFiscal": "98765432101234567",
+                                        "dataEmissao": "2023-08-15T12:30:45.678Z",
+                                        "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                                        "emitente": {
+                                            "cnpj": "09876543210987",
+                                            "razaoSocial": "Stark Industries",
+                                            "nomeFantasia": "Stark",
+                                            "endereco": {
+                                                "logradouro": "Avenida Tony Stark",
+                                                "numero": "123",
+                                                "complemento": "Torre Stark",
+                                                "bairro": "Malibu",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Los Angeles",
+                                                "sigaUF": "CA",
+                                                "cep": "90210"
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "cpf": "36497824596",
+                                            "razaoSocial": "Steve Rogers",
+                                            "nomeFantasia": "Steve Rogers",
+                                            "endereco": {
+                                                "logradouro": "Rua dos idosos",
+                                                "numero": "456",
+                                                "complemento": "Sala 42",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Nova York",
+                                                "sigaUF": "NY",
+                                                "cep": "13578456"
+                                            }
+                                        },
+                                        "enderecoEntrega": {
+                                            "logradouro": "Rua das Ilusões",
+                                            "numero": "789",
+                                            "complemento": "Bloco C",
+                                            "bairro": "Fantasia",
+                                            "codigoMunicipio": "",
+                                            "nomeMunicipio": "Cidade dos Sonhos",
+                                            "sigaUF": "FS",
+                                            "cep": "54321000"
+                                        }
+                                    }
+                                },
+                                "Exemplo 5 - Pedido": {
+                                    "value": {
+                                        "idExterno": "78933654",
+                                        "dataEmissao": "2023-08-15T12:30:45.678Z",
+                                        "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                                        "emitente": {
+                                            "cnpj": "09876543210987",
+                                            "razaoSocial": "Stark Industries",
+                                            "nomeFantasia": "Stark",
+                                            "endereco": {
+                                                "logradouro": "Avenida Tony Stark",
+                                                "numero": "123",
+                                                "complemento": "Torre Stark",
+                                                "bairro": "Malibu",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Los Angeles",
+                                                "sigaUF": "CA",
+                                                "cep": "90210"
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "cpf": "36497824596",
+                                            "razaoSocial": "Steve Rogers",
+                                            "nomeFantasia": "Steve Rogers",
+                                            "endereco": {
+                                                "logradouro": "Rua dos idosos",
+                                                "numero": "456",
+                                                "complemento": "Sala 42",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Nova York",
+                                                "sigaUF": "NY",
+                                                "cep": "13578456"
+                                            }
+                                        }
+                                    }
+                                },
+                                "Exemplo 6 - NF com veículo definido": {
+                                    "value": {
+                                        "chave": "48784564894456165789531657981",
+                                        "numeroDocumentoFiscal": "98765432101234567",
+                                        "dataEmissao": "2023-08-15T12:30:45.678Z",
+                                        "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                                        "placa": "MIO0103",
+                                        "emitente": {
+                                            "cnpj": "09876543210987",
+                                            "razaoSocial": "Stark Industries",
+                                            "nomeFantasia": "Stark",
+                                            "endereco": {
+                                                "logradouro": "Avenida Tony Stark",
+                                                "numero": "123",
+                                                "complemento": "Torre Stark",
+                                                "bairro": "Malibu",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Los Angeles",
+                                                "sigaUF": "CA",
+                                                "cep": "90210"
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "cpf": "36497824596",
+                                            "razaoSocial": "Steve Rogers",
+                                            "nomeFantasia": "Steve Rogers",
+                                            "endereco": {
+                                                "logradouro": "Rua dos idosos",
+                                                "numero": "456",
+                                                "complemento": "Sala 42",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Nova York",
+                                                "sigaUF": "NY",
+                                                "cep": "13578456"
+                                            }
+                                        }
+                                    }
+                                },
+                                "Exemplo 7 - NF com IdExterno da Rota": {
+                                    "value": {
+                                        "chave": "48784564894456165789531657981",
+                                        "numeroDocumentoFiscal": "98765432101234567",
+                                        "dataEmissao": "2023-08-15T12:30:45.678Z",
+                                        "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
+                                        "motoristaNome": "João da Silva",
+                                        "rotaRegiaoNome": "Região sul do estado",
+                                        "idExternoRota": "55893",
+                                        "emitente": {
+                                            "cnpj": "09876543210987",
+                                            "razaoSocial": "Stark Industries",
+                                            "nomeFantasia": "Stark",
+                                            "endereco": {
+                                                "logradouro": "Avenida Tony Stark",
+                                                "numero": "123",
+                                                "complemento": "Torre Stark",
+                                                "bairro": "Malibu",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Los Angeles",
+                                                "sigaUF": "CA",
+                                                "cep": "90210"
+                                            }
+                                        },
+                                        "destinatario": {
+                                            "cpf": "36497824596",
+                                            "razaoSocial": "Steve Rogers",
+                                            "nomeFantasia": "Steve Rogers",
+                                            "endereco": {
+                                                "logradouro": "Rua dos idosos",
+                                                "numero": "456",
+                                                "complemento": "Sala 42",
+                                                "bairro": "Centro",
+                                                "codigoMunicipio": "",
+                                                "nomeMunicipio": "Nova York",
+                                                "sigaUF": "NY",
+                                                "cep": "13578456"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Erro",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/NotaFiscal/Cancelar": {
+            "post": {
+                "tags": [
+                    "NotaFiscal"
+                ],
+                "summary": "Cancela uma nota fiscal",
+                "description": "Este endpoint é utilizado para cancelar uma nota fiscal. É necessário fornecer a chave, id externo ou número do documento fiscal da nota a ser cancelada.<br/><br/>O campo 'code' na resposta do endpoint é uma string e pode ser uma dessas a seguir: <br/>ERRO<br/>NF_OK<br/>NOT_OK<br/>OK<br/>NF_OK_REENTREGA<br/>NOT_OK_NF_EM_ROTA<br/>Podem ser inseridos mais campos futuramente.<br/>Data de atualização: 19/02/2024.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.NotaFiscalCancelamento"
+                            },
+                            "examples": {
+                                "Exemplo 1 - Por chave": {
+                                    "value": {
+                                        "chave": "48784564894456165789531657981",
+                                        "idExterno": "",
+                                        "numeroDocumentoFiscal": ""
+                                    }
+                                },
+                                "Exemplo 2 - Por id externo": {
+                                    "value": {
+                                        "chave": null,
+                                        "idExterno": "78660",
+                                        "numeroDocumentoFiscal": null
+                                    }
+                                },
+                                "Exemplo 3 - Por chave": {
+                                    "value": {
+                                        "chave": "48784564894456165789531657981"
+                                    }
+                                },
+                                "Exemplo 4 - Por id externo": {
+                                    "value": {
+                                        "idExterno": "78660"
+                                    }
+                                },
+                                "Exemplo 5 - Por numero do documento": {
+                                    "value": {
+                                        "numeroDocumentoFiscal": "265832"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Users/login": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Realizar login para gerar o token bearer de autenticação.",
+                "description": "Tomar cuidado com a expiração do token (Expira meia noite).",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Monitoramento_Backend.Models.User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserReturn"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     },
-    "/api/NotaFiscal": {
-      "post": {
-        "tags": [
-          "NotaFiscal"
-        ],
-        "summary": "Posta uma nota fiscal para registro baseado pelo xml completo em string.",
-        "description": "No campo xml é necessário o arquivo xml convertido para string. Atenção na conversão das aspas duplas (\"\"). É aceito apenas xml de NFe e de CTe.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Monitoramento_Backend.NFe_Dto.XMLDto"
-              },
-              "examples": {
-                "Exemplo 1 - Conversão aspas \"": {
-                  "value": {
-                    "xml": "<nfeProc versao=\"4.00\" xmlns=\"http://www.portalfiscal.inf.br/nfe\"> <NFe xmlns=\"http://www.portalfiscal.inf.br/nfe\"> </NFe> </nfeProc>"
-                  }
+    "components": {
+        "schemas": {
+            "UrlBackend": {
+                "type": "object",
+                "properties": {
+                    "Backend": {
+                        "type": "string",
+                        "default": "https://container-app-prod-ms-backend.proudsand-a95781db.eastus.azurecontainerapps.io"
+                    }
                 }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Sucesso",
-            "content": {
-              "text/plain": {
-                "example": "Mensagem de retorno"
-              }
-            }
-          },
-          "404": {
-            "description": "Erro",
-            "content": {
-              "text/plain": {
-                "example": "Mensagem de retorno"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/NotaFiscal/Import": {
-      "post": {
-        "tags": [
-          "NotaFiscal"
-        ],
-        "summary": "Posta uma nota fiscal/pedido para registro baseado no modelo preenchido.",
-        "description": "Endpoint utilizado para importar nota fiscal / pedido (conforme desejo do cliente). <br/><br/> Atenção nos campos chave, idExterno e número do documento fiscal, pois esses campos são usados para verificar se o pedido ou NF já está cadastrado no sistema ou não, sendo assim, caso seja enviado o mesmo idExterno, chave ou número do documento fiscal, o registro será desconsiderado.<br/><br/> Exemplo 0 - Exemplo completo com todas as informações possíveis no requestBody.<br/><br/> Exemplo 1 - NF apenas com informações básicas, necessário chave e número do documento. (Nessa opção o endereço de entrega é considerado o endereço do destinatário). <br/><br/> Exemplo 2 - NF básica com a adição de valores e produtos. <br/><br/> Exemplo 3 - NF com produtos com a adição de peso e volume. <br/><br/> Exemplo 4 - Nesse exemplo, o endereço de entrega será considerado efetivamente o objeto que está no campo \"enderecoEntrega\" e não o endereço do destinatário. Desse modo, o destinatário pode possuir um endereço de entrega diferente do endereço de seu cadastro. <br/><br/> Exemplo 5 - Pedido: Segue os mesmos padrões de NF, porém com em vez de serem utilizados os campos chave e número do documento, deve ser utilizado o idExterno (Esse id pode ser o mesmo do sistema ERP, porém, caso o sistema repita ids, será realizado o update, não recomendamos esse método caso ocorra a repetição dos ids como citado anteriormente / No modo de pedido também é possível adicionar peso, volume, produtos e total, bem como endereço de entrega confome os exemplos acima). <br/><br/> Exemplo 6 - Neste exemplo o campo placa é passado como parâmetro e o sistema a levará em consideração para separar as NFs entre os veículos (Placas). <br/> Obs: As placas precisam estar cadastradas no sistema Grafos Tech para terem validade. <br/><br/> Exemplo 7 - Neste exemplo o campo IdExternoRota é passa do como parametro, e o sistema levará em consideração a rota para separar as NFs, caso não encontre nenhuma rota com o IdExterno enviado a NF será adicionada seguindo o fluxo normal. Caso a NF já esteja em uma rota, basta passar outro IdExternoRota com a mesma Chave/IdExterno/NumeroDocumento para a NF ser transferida para outra rota.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Monitoramento_Backend.Models.NotaFiscal"
-              },
-              "examples": {
-                "Exemplo 0 - NF Completa": {
-                  "value": {
-                    "chave": "35210712345678901234567890123456-uli2",
-                    "idExterno": "NF-2024-001234-uli2",
-                    "naturezaOperacao": "VENDA",
-                    "numeroDocumentoFiscal": "123456-uli2",
-                    "dataEmissao": "2024-01-15T10:30:00",
-                    "dataSaidaEntrada": "2024-01-15T14:00:00",
-                    "tipoOperacao": 0,
-                    "finalidadeEmissao": 1,
-                    "informacaoAdicionalFisco": "Informações adicionais para o fisco",
-                    "informacaoComplementar": "Informações complementares da nota fiscal",
-                    "placa": "ABC-1234",
-                    "veiculoCodigoExterno": "VEI-001",
-                    "formaPagamento": "Boleto",
-                    "especie": "Nota Fiscal Eletrônica",
-                    "cfop": "5102",
-                    "codUltimaOcorrencia": "100",
-                    "descricaoUltimaOcorrencia": "Autorizado o uso da NF-e",
-                    "dataProgramada": "2024-01-20T08:00:00",
-                    "previsaoEntrega": "2024-01-20T17:00:00",
-                    "agendamentoTransportadora": "2024-01-19T10:00:00",
-                    "setorEntrega": "Setor Norte",
-                    "transportadoraDocumento": "12.345.678/0001-90",
-                    "adicionarDocEmRota": true,
-                    "motoristaNome": "João Silva",
-                    "rotaRegiaoNome": "Região Metropolitana",
-                    "localInicioDescricao": "Centro de Distribuição",
-                    "localFimDescricao": "Cliente Final",
-                    "agendamentoInicio": "2024-01-20T08:00:00",
-                    "agendamentoFim": "2024-01-20T18:00:00",
-                    "tipoDocumento": 0,
-                    "tipoAgendamento": 1,
-                    "pesoBruto": 150.50,
-                    "pesoLiquido": 140.25,
-                    "pesoCalculado": 145.00,
-                    "cubagem": 2.5,
-                    "quantidadePares": 10,
-                    "quantidadeVolume": 5,
-                    "idExternoRota": "IXL7G71-20251217-23",
-                    "emitente": {
-                      "idExterno": "EMI-001",
-                      "cpf": null,
-                      "cnpj": "12.345.678/0001-90",
-                      "razaoSocial": "Empresa Emitente LTDA",
-                      "nomeFantasia": "Emitente Comércio",
-                      "inscricaoEstadual": "123.456.789.012",
-                      "telefone": "(11) 98765-4321",
-                      "telefone2": "(11) 98765-4322",
-                      "email": "contato@emitente.com.br",
-                      "tipo": 2,
-                      "endereco": {
-                        "logradouro": "Rua das Flores",
-                        "numero": "123",
-                        "complemento": "Sala 101",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "3550308",
-                        "nomeMunicipio": "São Paulo",
-                        "sigaUF": "SP",
-                        "cep": "01234-567",
-                        "latitude": -23.5505199,
-                        "longitude": -46.6333094,
-                        "altitude": 760.0,
-                        "preencherLatLng": true
-                      }
-                    },
-                    "destinatario": {
-                      "idExterno": "DES-001",
-                      "cpf": "123.456.789-00",
-                      "cnpj": null,
-                      "razaoSocial": "Cliente Destinatário LTDA",
-                      "nomeFantasia": "Destinatário Comércio",
-                      "inscricaoEstadual": "987.654.321.098",
-                      "observacaoLogistica": "Colocar informações que vão aparecer apenas para quem cria a rota do motorista",
-                      "observacaoMotorista": "Colocar informações que vão aparecer apenas para o motorista",
-                      "telefone": "(11) 91234-5678",
-                      "telefone2": null,
-                      "email": "contato@destinatario.com.br",
-                      "tipo": 1,
-                      "endereco": {
-                        "logradouro": "Avenida Paulista",
-                        "numero": "1000",
-                        "complemento": "Apto 45",
-                        "bairro": "Bela Vista",
-                        "codigoMunicipio": "3550308",
-                        "nomeMunicipio": "São Paulo",
-                        "sigaUF": "SP",
-                        "cep": "01310-100",
-                        "latitude": -23.5613991,
-                        "longitude": -46.6565712,
-                        "altitude": 780.0,
-                        "preencherLatLng": true
-                      },
-                      "Janelas": [
-													{
-														"Inicio": "2000-01-01T06:00:00.000Z",
-														"Fim": "2000-01-01T15:00:00.000Z",
-														"DiaDaSemana": "1"
-													},
-													{
-														"Inicio": "2000-01-01T06:00:00.000Z",
-														"Fim": "2000-01-01T15:00:00.000Z",
-														"DiaDaSemana": "2"
-													},
-													{
-														"Inicio": "2000-01-01T06:00:00.000Z",
-														"Fim": "2000-01-01T15:00:00.000Z",
-														"DiaDaSemana": "3"
-													},
-													{
-														"Inicio": "2000-01-01T06:00:00.000Z",
-														"Fim": "2000-01-01T15:00:00.000Z",
-														"DiaDaSemana": "4"
-													},
-													{	
-														"Inicio": "2000-01-01T06:00:00.000Z",
-														"Fim": "2000-01-01T15:00:00.000Z",
-														"DiaDaSemana": "5"
-													},
-													{
-														"Inicio": "2000-01-01T06:00:00.000Z",
-														"Fim": "2000-01-01T10:00:00.000Z",
-														"DiaDaSemana": "6"
-													}
-												]
-                    },
-                    "remetente": {
-                      "idExterno": "REM-001",
-                      "cpf": null,
-                      "cnpj": "98.765.432/0001-10",
-                      "razaoSocial": "Remetente Transportes LTDA",
-                      "nomeFantasia": "Remetente Log",
-                      "inscricaoEstadual": "111.222.333.444",
-                      "telefone": "(11) 91111-2222",
-                      "telefone2": null,
-                      "email": "contato@remetente.com.br",
-                      "tipo": 4,
-                      "endereco": {
-                        "logradouro": "Rua dos Remetentes",
-                        "numero": "500",
-                        "complemento": null,
-                        "bairro": "Vila Remetente",
-                        "codigoMunicipio": "3550308",
-                        "nomeMunicipio": "São Paulo",
-                        "sigaUF": "SP",
-                        "cep": "02000-000",
-                        "latitude": -23.5000000,
-                        "longitude": -46.6000000,
-                        "altitude": 750.0,
-                        "preencherLatLng": true
-                      }
-                    },
-                    "recebedor": {
-                      "idExterno": "REC-001",
-                      "cpf": "987.654.321-00",
-                      "cnpj": null,
-                      "razaoSocial": "Recebedor Final LTDA",
-                      "nomeFantasia": "Recebedor Comércio",
-                      "inscricaoEstadual": "555.666.777.888",
-                      "telefone": "(11) 93333-4444",
-                      "telefone2": null,
-                      "email": "contato@recebedor.com.br",
-                      "tipo": 5,
-                      "endereco": {
-                        "logradouro": "Rua dos Recebedores",
-                        "numero": "750",
-                        "complemento": "Galpão 2",
-                        "bairro": "Distrito Industrial",
-                        "codigoMunicipio": "3550308",
-                        "nomeMunicipio": "São Paulo",
-                        "sigaUF": "SP",
-                        "cep": "03000-000",
-                        "latitude": -23.5500000,
-                        "longitude": -46.6500000,
-                        "altitude": 770.0,
-                        "preencherLatLng": true
-                      }
-                    },
-                    "total": {
-                      "valor": 1000.00,
-                      "valorFrete": 50.00,
-                      "valorDesconto": 100.00,
-                      "valorOutros": 25.00,
-                      "valorTotal": 975.00
-                    },
-                    "enderecoEntrega": {
-                      "logradouro": "Rua de Entrega",
-                      "numero": "999",
-                      "complemento": "Portão 3",
-                      "bairro": "Bairro Entrega",
-                      "codigoMunicipio": "3550308",
-                      "nomeMunicipio": "São Paulo",
-                      "sigaUF": "SP",
-                      "cep": "04000-000",
-                      "latitude": -23.5600000,
-                      "longitude": -46.6400000,
-                      "altitude": 775.0,
-                      "preencherLatLng": true
-                    },
-                    "produtosServicos": [
-                      {
-                        "quantidade": 10.0,
-                        "valorUnitario": 50.00,
-                        "valorTotalBruto": 500.00,
-                        "valorDesconto": 25.00,
-                        "valorEntraValorTotal": 1,
-                        "produtoServico": {
-                          "codigoProdutoServico": "PROD-001",
-                          "codigoBarra": "7891234567890",
-                          "descricao": "Produto Exemplo 1",
-                          "codigoNcm": "1234.56.78",
-                          "unidadeComercial": "UN"
-                        }
-                      },
-                      {
-                        "quantidade": 5.0,
-                        "valorUnitario": 100.00,
-                        "valorTotalBruto": 500.00,
-                        "valorDesconto": 50.00,
-                        "valorEntraValorTotal": 1,
-                        "produtoServico": {
-                          "codigoProdutoServico": "PROD-002",
-                          "codigoBarra": "7891234567891",
-                          "descricao": "Produto Exemplo 2",
-                          "codigoNcm": "2345.67.89",
-                          "unidadeComercial": "KG"
-                        }
-                      }
-                    ],
-                    "vendedorDescricao": "Vendedor João",
-                    "localEntregaDescricao": "Loja Principal - Centro"
-                  }
-                },
-                "Exemplo 1 - NF Básica": {
-                  "value": {
-                    "chave": "48784564894456165789531657981",
-                    "numeroDocumentoFiscal": "98765432101234567",
-                    "dataEmissao": "2023-08-15T12:30:45.678Z",
-                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
-                    "emitente": {
-                      "cnpj": "09876543210987",
-                      "razaoSocial": "Stark Industries",
-                      "nomeFantasia": "Stark",
-                      "endereco": {
-                        "logradouro": "Avenida Tony Stark",
-                        "numero": "123",
-                        "complemento": "Torre Stark",
-                        "bairro": "Malibu",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Los Angeles",
-                        "sigaUF": "CA",
-                        "cep": "90210"
-                      }
-                    },
-                    "destinatario": {
-                      "cpf": "36497824596",
-                      "razaoSocial": "Steve Rogers",
-                      "nomeFantasia": "Steve Rogers",
-                      "endereco": {
-                        "logradouro": "Rua dos idosos",
-                        "numero": "456",
-                        "complemento": "Sala 42",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Nova York",
-                        "sigaUF": "NY",
-                        "cep": "13578456"
-                      }
-                    }
-                  }
-                },
-                "Exemplo 2 - NF com produtos": {
-                  "value": {
-                    "chave": "48784564894456165789531657981",
-                    "numeroDocumentoFiscal": "98765432101234567",
-                    "dataEmissao": "2023-08-15T12:30:45.678Z",
-                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
-                    "emitente": {
-                      "cnpj": "09876543210987",
-                      "razaoSocial": "Stark Industries",
-                      "nomeFantasia": "Stark",
-                      "endereco": {
-                        "logradouro": "Avenida Tony Stark",
-                        "numero": "123",
-                        "complemento": "Torre Stark",
-                        "bairro": "Malibu",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Los Angeles",
-                        "sigaUF": "CA",
-                        "cep": "90210"
-                      }
-                    },
-                    "destinatario": {
-                      "cpf": "36497824596",
-                      "razaoSocial": "Steve Rogers",
-                      "nomeFantasia": "Steve Rogers",
-                      "endereco": {
-                        "logradouro": "Rua dos idosos",
-                        "numero": "456",
-                        "complemento": "Sala 42",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Nova York",
-                        "sigaUF": "NY",
-                        "cep": "13578456"
-                      }
-                    },
-                    "total": {
-                      "valor": 1500,
-                      "valorFrete": 50,
-                      "valorDesconto": 100,
-                      "valorOutros": 20,
-                      "valorTotal": 1470
-                    },
-                    "produtosServicos": [
-                      {
-                        "quantidade": 1,
-                        "valorUnitario": 500,
-                        "valorTotalBruto": 500,
-                        "valorDesconto": 50,
-                        "valorEntraValorTotal": 450,
-                        "produtoServico": {
-                          "codigoProdutoServico": "001",
-                          "codigoBarra": "1234567890123",
-                          "descricao": "Escudo de Vibranium",
-                          "codigoNcm": "98765432",
-                          "unidadeComercial": "un"
-                        }
-                      },
-                      {
-                        "quantidade": 2,
-                        "valorUnitario": 600,
-                        "valorTotalBruto": 1200,
-                        "valorDesconto": 50,
-                        "valorEntraValorTotal": 1150,
-                        "produtoServico": {
-                          "codigoProdutoServico": "002",
-                          "codigoBarra": "9876543210987",
-                          "descricao": "Armadura Mark XLVII",
-                          "codigoNcm": "87654321",
-                          "unidadeComercial": "un"
-                        }
-                      }
-                    ]
-                  }
-                },
-                "Exemplo 3 - NF com produtos + peso e volume": {
-                  "value": {
-                    "chave": "48784564894456165789531657981",
-                    "numeroDocumentoFiscal": "98765432101234567",
-                    "dataEmissao": "2023-08-15T12:30:45.678Z",
-                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
-                    "pesoBruto": 15.5,
-                    "pesoLiquido": 13.8,
-                    "quantidadeVolume": 2,
-                    "especie": "caixas",
-                    "emitente": {
-                      "cnpj": "09876543210987",
-                      "razaoSocial": "Stark Industries",
-                      "nomeFantasia": "Stark",
-                      "endereco": {
-                        "logradouro": "Avenida Tony Stark",
-                        "numero": "123",
-                        "complemento": "Torre Stark",
-                        "bairro": "Malibu",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Los Angeles",
-                        "sigaUF": "CA",
-                        "cep": "90210"
-                      }
-                    },
-                    "destinatario": {
-                      "cpf": "36497824596",
-                      "razaoSocial": "Steve Rogers",
-                      "nomeFantasia": "Steve Rogers",
-                      "endereco": {
-                        "logradouro": "Rua dos idosos",
-                        "numero": "456",
-                        "complemento": "Sala 42",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Nova York",
-                        "sigaUF": "NY",
-                        "cep": "13578456"
-                      }
-                    },
-                    "total": {
-                      "valor": 1500,
-                      "valorFrete": 50,
-                      "valorDesconto": 100,
-                      "valorOutros": 20,
-                      "valorTotal": 1470
-                    },
-                    "produtosServicos": [
-                      {
-                        "quantidade": 1,
-                        "valorUnitario": 500,
-                        "valorTotalBruto": 500,
-                        "valorDesconto": 50,
-                        "valorEntraValorTotal": 450,
-                        "produtoServico": {
-                          "codigoProdutoServico": "001",
-                          "codigoBarra": "1234567890123",
-                          "descricao": "Escudo de Vibranium",
-                          "codigoNcm": "98765432",
-                          "unidadeComercial": "un"
-                        }
-                      },
-                      {
-                        "quantidade": 2,
-                        "valorUnitario": 600,
-                        "valorTotalBruto": 1200,
-                        "valorDesconto": 50,
-                        "valorEntraValorTotal": 1150,
-                        "produtoServico": {
-                          "codigoProdutoServico": "002",
-                          "codigoBarra": "9876543210987",
-                          "descricao": "Armadura Mark XLVII",
-                          "codigoNcm": "87654321",
-                          "unidadeComercial": "un"
-                        }
-                      }
-                    ]
-                  }
-                },
-                "Exemplo 4 - NF Básica com endereço de entrega diferente do endereço de cadastro do destinatário": {
-                  "value": {
-                    "chave": "48784564894456165789531657981",
-                    "numeroDocumentoFiscal": "98765432101234567",
-                    "dataEmissao": "2023-08-15T12:30:45.678Z",
-                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
-                    "emitente": {
-                      "cnpj": "09876543210987",
-                      "razaoSocial": "Stark Industries",
-                      "nomeFantasia": "Stark",
-                      "endereco": {
-                        "logradouro": "Avenida Tony Stark",
-                        "numero": "123",
-                        "complemento": "Torre Stark",
-                        "bairro": "Malibu",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Los Angeles",
-                        "sigaUF": "CA",
-                        "cep": "90210"
-                      }
-                    },
-                    "destinatario": {
-                      "cpf": "36497824596",
-                      "razaoSocial": "Steve Rogers",
-                      "nomeFantasia": "Steve Rogers",
-                      "endereco": {
-                        "logradouro": "Rua dos idosos",
-                        "numero": "456",
-                        "complemento": "Sala 42",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Nova York",
-                        "sigaUF": "NY",
-                        "cep": "13578456"
-                      }
-                    },
-                    "enderecoEntrega": {
-                      "logradouro": "Rua das Ilusões",
-                      "numero": "789",
-                      "complemento": "Bloco C",
-                      "bairro": "Fantasia",
-                      "codigoMunicipio": "",
-                      "nomeMunicipio": "Cidade dos Sonhos",
-                      "sigaUF": "FS",
-                      "cep": "54321000"
-                    }
-                  }
-                },
-                "Exemplo 5 - Pedido": {
-                  "value": {
-                    "idExterno": "78933654",
-                    "dataEmissao": "2023-08-15T12:30:45.678Z",
-                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
-                    "emitente": {
-                      "cnpj": "09876543210987",
-                      "razaoSocial": "Stark Industries",
-                      "nomeFantasia": "Stark",
-                      "endereco": {
-                        "logradouro": "Avenida Tony Stark",
-                        "numero": "123",
-                        "complemento": "Torre Stark",
-                        "bairro": "Malibu",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Los Angeles",
-                        "sigaUF": "CA",
-                        "cep": "90210"
-                      }
-                    },
-                    "destinatario": {
-                      "cpf": "36497824596",
-                      "razaoSocial": "Steve Rogers",
-                      "nomeFantasia": "Steve Rogers",
-                      "endereco": {
-                        "logradouro": "Rua dos idosos",
-                        "numero": "456",
-                        "complemento": "Sala 42",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Nova York",
-                        "sigaUF": "NY",
-                        "cep": "13578456"
-                      }
-                    }
-                  }
-                },
-                "Exemplo 6 - NF com veículo definido": {
-                  "value": {
-                    "chave": "48784564894456165789531657981",
-                    "numeroDocumentoFiscal": "98765432101234567",
-                    "dataEmissao": "2023-08-15T12:30:45.678Z",
-                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
-                    "placa": "MIO0103",
-                    "emitente": {
-                      "cnpj": "09876543210987",
-                      "razaoSocial": "Stark Industries",
-                      "nomeFantasia": "Stark",
-                      "endereco": {
-                        "logradouro": "Avenida Tony Stark",
-                        "numero": "123",
-                        "complemento": "Torre Stark",
-                        "bairro": "Malibu",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Los Angeles",
-                        "sigaUF": "CA",
-                        "cep": "90210"
-                      }
-                    },
-                    "destinatario": {
-                      "cpf": "36497824596",
-                      "razaoSocial": "Steve Rogers",
-                      "nomeFantasia": "Steve Rogers",
-                      "endereco": {
-                        "logradouro": "Rua dos idosos",
-                        "numero": "456",
-                        "complemento": "Sala 42",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Nova York",
-                        "sigaUF": "NY",
-                        "cep": "13578456"
-                      }
-                    }
-                  }
-                },
-                "Exemplo 7 - NF com IdExterno da Rota": {
-                  "value": {
-                    "chave": "48784564894456165789531657981",
-                    "numeroDocumentoFiscal": "98765432101234567",
-                    "dataEmissao": "2023-08-15T12:30:45.678Z",
-                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
-                    "motoristaNome": "João da Silva",
-                    "rotaRegiaoNome": "Região sul do estado",
-                    "idExternoRota": "55893",
-                    "emitente": {
-                      "cnpj": "09876543210987",
-                      "razaoSocial": "Stark Industries",
-                      "nomeFantasia": "Stark",
-                      "endereco": {
-                        "logradouro": "Avenida Tony Stark",
-                        "numero": "123",
-                        "complemento": "Torre Stark",
-                        "bairro": "Malibu",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Los Angeles",
-                        "sigaUF": "CA",
-                        "cep": "90210"
-                      }
-                    },
-                    "destinatario": {
-                      "cpf": "36497824596",
-                      "razaoSocial": "Steve Rogers",
-                      "nomeFantasia": "Steve Rogers",
-                      "endereco": {
-                        "logradouro": "Rua dos idosos",
-                        "numero": "456",
-                        "complemento": "Sala 42",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Nova York",
-                        "sigaUF": "NY",
-                        "cep": "13578456"
-                      }
-                    }
-                  }
-                },
-                "Exemplo 8 - NF com IdExterno da Rota, motorista e placa": {
-                  "value": {
-                    "chave": "48784564894456165789531657981",
-                    "numeroDocumentoFiscal": "98765432101234567",
-                    "dataEmissao": "2023-08-15T12:30:45.678Z",
-                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
-                    "idExternoRota": "55893",
-                    "placa": "MMM0001",
-                    "motoristaNome": "Joao da Silva",
-                    "emitente": {
-                      "cnpj": "09876543210987",
-                      "razaoSocial": "Stark Industries",
-                      "nomeFantasia": "Stark",
-                      "endereco": {
-                        "logradouro": "Avenida Tony Stark",
-                        "numero": "123",
-                        "complemento": "Torre Stark",
-                        "bairro": "Malibu",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Los Angeles",
-                        "sigaUF": "CA",
-                        "cep": "90210"
-                      }
-                    },
-                    "destinatario": {
-                      "cpf": "36497824596",
-                      "razaoSocial": "Steve Rogers",
-                      "nomeFantasia": "Steve Rogers",
-                      "endereco": {
-                        "logradouro": "Rua dos idosos",
-                        "numero": "456",
-                        "complemento": "Sala 42",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Nova York",
-                        "sigaUF": "NY",
-                        "cep": "13578456"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Sucesso",
-            "content": {
-              "text/plain": {
-                "example": "Mensagem de retorno"
-              }
-            }
-          },
-          "404": {
-            "description": "Erro",
-            "content": {
-              "text/plain": {
-                "example": "Mensagem de retorno"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/NotaFiscal/Import/v2": {
-      "post": {
-        "tags": [
-          "NotaFiscal"
-        ],
-        "summary": "Posta uma nota fiscal/pedido para registro baseado no modelo preenchido.",
-        "description": "Endpoint utilizado para importar nota fiscal / pedido (conforme desejo do cliente). <br/><br/> Atenção nos campos chave, idExterno e número do documento fiscal, pois esses campos são usados para verificar se o pedido ou NF já está cadastrado no sistema ou não, sendo assim, caso seja enviado o mesmo idExterno, chave ou número do documento fiscal, o registro será desconsiderado.<br/><br/> Exemplo 0 - Exemplo completo com todas as informações possíveis no requestBody. <br/><br/> Exemplo 1 - NF apenas com informações básicas, necessário chave e número do documento. (Nessa opção o endereço de entrega é considerado o endereço do destinatário). <br/><br/> Exemplo 2 - NF básica com a adição de valores e produtos. <br/><br/> Exemplo 3 - NF com produtos com a adição de peso e volume. <br/><br/> Exemplo 4 - Nesse exemplo, o endereço de entrega será considerado efetivamente o objeto que está no campo \"enderecoEntrega\" e não o endereço do destinatário. Desse modo, o destinatário pode possuir um endereço de entrega diferente do endereço de seu cadastro. <br/><br/> Exemplo 5 - Pedido: Segue os mesmos padrões de NF, porém com em vez de serem utilizados os campos chave e número do documento, deve ser utilizado o idExterno (Esse id pode ser o mesmo do sistema ERP, porém, caso o sistema repita ids, será realizado o update, não recomendamos esse método caso ocorra a repetição dos ids como citado anteriormente / No modo de pedido também é possível adicionar peso, volume, produtos e total, bem como endereço de entrega confome os exemplos acima). <br/><br/> Exemplo 6 - Neste exemplo o campo placa é passado como parâmetro e o sistema a levará em consideração para separar as NFs entre os veículos (Placas). <br/> Obs: As placas precisam estar cadastradas no sistema Grafos Tech para terem validade. <br/><br/> Exemplo 7 - Neste exemplo o campo IdExternoRota é passa do como parametro, e o sistema levará em consideração a rota para separar as NFs, caso não encontre nenhuma rota com o IdExterno enviado a NF será adicionada seguindo o fluxo normal. Caso a NF já esteja em uma rota, basta passar outro IdExternoRota com a mesma Chave/IdExterno/NumeroDocumento para a NF ser transferida para outra rota.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Monitoramento_Backend.Models.NotaFiscal"
-              },
-              "examples": {
-                "Exemplo 0 - NF Completa": {
-                  "value": {
-                    "chave": "35210712345678901234567890123456-uli2",
-                    "idExterno": "NF-2024-001234-uli2",
-                    "naturezaOperacao": "VENDA",
-                    "numeroDocumentoFiscal": "123456-uli2",
-                    "dataEmissao": "2024-01-15T10:30:00",
-                    "dataSaidaEntrada": "2024-01-15T14:00:00",
-                    "tipoOperacao": 0,
-                    "finalidadeEmissao": 1,
-                    "informacaoAdicionalFisco": "Informações adicionais para o fisco",
-                    "informacaoComplementar": "Informações complementares da nota fiscal",
-                    "placa": "ABC-1234",
-                    "veiculoCodigoExterno": "VEI-001",
-                    "formaPagamento": "Boleto",
-                    "especie": "Nota Fiscal Eletrônica",
-                    "cfop": "5102",
-                    "codUltimaOcorrencia": "100",
-                    "descricaoUltimaOcorrencia": "Autorizado o uso da NF-e",
-                    "dataProgramada": "2024-01-20T08:00:00",
-                    "previsaoEntrega": "2024-01-20T17:00:00",
-                    "agendamentoTransportadora": "2024-01-19T10:00:00",
-                    "setorEntrega": "Setor Norte",
-                    "transportadoraDocumento": "12.345.678/0001-90",
-                    "adicionarDocEmRota": true,
-                    "motoristaNome": "João Silva",
-                    "rotaRegiaoNome": "Região Metropolitana",
-                    "localInicioDescricao": "Centro de Distribuição",
-                    "localFimDescricao": "Cliente Final",
-                    "agendamentoInicio": "2024-01-20T08:00:00",
-                    "agendamentoFim": "2024-01-20T18:00:00",
-                    "tipoDocumento": 0,
-                    "tipoAgendamento": 1,
-                    "pesoBruto": 150.50,
-                    "pesoLiquido": 140.25,
-                    "pesoCalculado": 145.00,
-                    "cubagem": 2.5,
-                    "quantidadePares": 10,
-                    "quantidadeVolume": 5,
-                    "idExternoRota": "IXL7G71-20251217-23",
-                    "emitente": {
-                      "idExterno": "EMI-001",
-                      "cpf": null,
-                      "cnpj": "12.345.678/0001-90",
-                      "razaoSocial": "Empresa Emitente LTDA",
-                      "nomeFantasia": "Emitente Comércio",
-                      "inscricaoEstadual": "123.456.789.012",
-                      "telefone": "(11) 98765-4321",
-                      "telefone2": "(11) 98765-4322",
-                      "email": "contato@emitente.com.br",
-                      "tipo": 2,
-                      "endereco": {
-                        "logradouro": "Rua das Flores",
-                        "numero": "123",
-                        "complemento": "Sala 101",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "3550308",
-                        "nomeMunicipio": "São Paulo",
-                        "sigaUF": "SP",
-                        "cep": "01234-567",
-                        "latitude": -23.5505199,
-                        "longitude": -46.6333094,
-                        "altitude": 760.0,
-                        "preencherLatLng": true
-                      }
-                    },
-                    "destinatario": {
-                      "idExterno": "DES-001",
-                      "cpf": "123.456.789-00",
-                      "cnpj": null,
-                      "razaoSocial": "Cliente Destinatário LTDA",
-                      "nomeFantasia": "Destinatário Comércio",
-                      "inscricaoEstadual": "987.654.321.098",
-                      "telefone": "(11) 91234-5678",
-                      "telefone2": null,
-                      "email": "contato@destinatario.com.br",
-                      "tipo": 1,
-                      "endereco": {
-                        "logradouro": "Avenida Paulista",
-                        "numero": "1000",
-                        "complemento": "Apto 45",
-                        "bairro": "Bela Vista",
-                        "codigoMunicipio": "3550308",
-                        "nomeMunicipio": "São Paulo",
-                        "sigaUF": "SP",
-                        "cep": "01310-100",
-                        "latitude": -23.5613991,
-                        "longitude": -46.6565712,
-                        "altitude": 780.0,
-                        "preencherLatLng": true
-                      }
-                    },
-                    "remetente": {
-                      "idExterno": "REM-001",
-                      "cpf": null,
-                      "cnpj": "98.765.432/0001-10",
-                      "razaoSocial": "Remetente Transportes LTDA",
-                      "nomeFantasia": "Remetente Log",
-                      "inscricaoEstadual": "111.222.333.444",
-                      "telefone": "(11) 91111-2222",
-                      "telefone2": null,
-                      "email": "contato@remetente.com.br",
-                      "tipo": 4,
-                      "endereco": {
-                        "logradouro": "Rua dos Remetentes",
-                        "numero": "500",
-                        "complemento": null,
-                        "bairro": "Vila Remetente",
-                        "codigoMunicipio": "3550308",
-                        "nomeMunicipio": "São Paulo",
-                        "sigaUF": "SP",
-                        "cep": "02000-000",
-                        "latitude": -23.5000000,
-                        "longitude": -46.6000000,
-                        "altitude": 750.0,
-                        "preencherLatLng": true
-                      }
-                    },
-                    "recebedor": {
-                      "idExterno": "REC-001",
-                      "cpf": "987.654.321-00",
-                      "cnpj": null,
-                      "razaoSocial": "Recebedor Final LTDA",
-                      "nomeFantasia": "Recebedor Comércio",
-                      "inscricaoEstadual": "555.666.777.888",
-                      "telefone": "(11) 93333-4444",
-                      "telefone2": null,
-                      "email": "contato@recebedor.com.br",
-                      "tipo": 5,
-                      "endereco": {
-                        "logradouro": "Rua dos Recebedores",
-                        "numero": "750",
-                        "complemento": "Galpão 2",
-                        "bairro": "Distrito Industrial",
-                        "codigoMunicipio": "3550308",
-                        "nomeMunicipio": "São Paulo",
-                        "sigaUF": "SP",
-                        "cep": "03000-000",
-                        "latitude": -23.5500000,
-                        "longitude": -46.6500000,
-                        "altitude": 770.0,
-                        "preencherLatLng": true
-                      }
-                    },
-                    "total": {
-                      "valor": 1000.00,
-                      "valorFrete": 50.00,
-                      "valorDesconto": 100.00,
-                      "valorOutros": 25.00,
-                      "valorTotal": 975.00
-                    },
-                    "enderecoEntrega": {
-                      "logradouro": "Rua de Entrega",
-                      "numero": "999",
-                      "complemento": "Portão 3",
-                      "bairro": "Bairro Entrega",
-                      "codigoMunicipio": "3550308",
-                      "nomeMunicipio": "São Paulo",
-                      "sigaUF": "SP",
-                      "cep": "04000-000",
-                      "latitude": -23.5600000,
-                      "longitude": -46.6400000,
-                      "altitude": 775.0,
-                      "preencherLatLng": true
-                    },
-                    "produtosServicos": [
-                      {
-                        "quantidade": 10.0,
-                        "valorUnitario": 50.00,
-                        "valorTotalBruto": 500.00,
-                        "valorDesconto": 25.00,
-                        "valorEntraValorTotal": 1,
-                        "produtoServico": {
-                          "codigoProdutoServico": "PROD-001",
-                          "codigoBarra": "7891234567890",
-                          "descricao": "Produto Exemplo 1",
-                          "codigoNcm": "1234.56.78",
-                          "unidadeComercial": "UN"
-                        }
-                      },
-                      {
-                        "quantidade": 5.0,
-                        "valorUnitario": 100.00,
-                        "valorTotalBruto": 500.00,
-                        "valorDesconto": 50.00,
-                        "valorEntraValorTotal": 1,
-                        "produtoServico": {
-                          "codigoProdutoServico": "PROD-002",
-                          "codigoBarra": "7891234567891",
-                          "descricao": "Produto Exemplo 2",
-                          "codigoNcm": "2345.67.89",
-                          "unidadeComercial": "KG"
-                        }
-                      }
-                    ],
-                    "vendedorDescricao": "Vendedor João",
-                    "localEntregaDescricao": "Loja Principal - Centro"
-                  }
-                },
-                "Exemplo 1 - NF Básica": {
-                  "value": {
-                    "chave": "48784564894456165789531657981",
-                    "numeroDocumentoFiscal": "98765432101234567",
-                    "dataEmissao": "2023-08-15T12:30:45.678Z",
-                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
-                    "emitente": {
-                      "cnpj": "09876543210987",
-                      "razaoSocial": "Stark Industries",
-                      "nomeFantasia": "Stark",
-                      "endereco": {
-                        "logradouro": "Avenida Tony Stark",
-                        "numero": "123",
-                        "complemento": "Torre Stark",
-                        "bairro": "Malibu",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Los Angeles",
-                        "sigaUF": "CA",
-                        "cep": "90210"
-                      }
-                    },
-                    "destinatario": {
-                      "cpf": "36497824596",
-                      "razaoSocial": "Steve Rogers",
-                      "nomeFantasia": "Steve Rogers",
-                      "endereco": {
-                        "logradouro": "Rua dos idosos",
-                        "numero": "456",
-                        "complemento": "Sala 42",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Nova York",
-                        "sigaUF": "NY",
-                        "cep": "13578456"
-                      }
-                    }
-                  }
-                },
-                "Exemplo 2 - NF com produtos": {
-                  "value": {
-                    "chave": "48784564894456165789531657981",
-                    "numeroDocumentoFiscal": "98765432101234567",
-                    "dataEmissao": "2023-08-15T12:30:45.678Z",
-                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
-                    "emitente": {
-                      "cnpj": "09876543210987",
-                      "razaoSocial": "Stark Industries",
-                      "nomeFantasia": "Stark",
-                      "endereco": {
-                        "logradouro": "Avenida Tony Stark",
-                        "numero": "123",
-                        "complemento": "Torre Stark",
-                        "bairro": "Malibu",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Los Angeles",
-                        "sigaUF": "CA",
-                        "cep": "90210"
-                      }
-                    },
-                    "destinatario": {
-                      "cpf": "36497824596",
-                      "razaoSocial": "Steve Rogers",
-                      "nomeFantasia": "Steve Rogers",
-                      "endereco": {
-                        "logradouro": "Rua dos idosos",
-                        "numero": "456",
-                        "complemento": "Sala 42",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Nova York",
-                        "sigaUF": "NY",
-                        "cep": "13578456"
-                      }
-                    },
-                    "total": {
-                      "valor": 1500,
-                      "valorFrete": 50,
-                      "valorDesconto": 100,
-                      "valorOutros": 20,
-                      "valorTotal": 1470
-                    },
-                    "produtosServicos": [
-                      {
-                        "quantidade": 1,
-                        "valorUnitario": 500,
-                        "valorTotalBruto": 500,
-                        "valorDesconto": 50,
-                        "valorEntraValorTotal": 450,
-                        "produtoServico": {
-                          "codigoProdutoServico": "001",
-                          "codigoBarra": "1234567890123",
-                          "descricao": "Escudo de Vibranium",
-                          "codigoNcm": "98765432",
-                          "unidadeComercial": "un"
-                        }
-                      },
-                      {
-                        "quantidade": 2,
-                        "valorUnitario": 600,
-                        "valorTotalBruto": 1200,
-                        "valorDesconto": 50,
-                        "valorEntraValorTotal": 1150,
-                        "produtoServico": {
-                          "codigoProdutoServico": "002",
-                          "codigoBarra": "9876543210987",
-                          "descricao": "Armadura Mark XLVII",
-                          "codigoNcm": "87654321",
-                          "unidadeComercial": "un"
-                        }
-                      }
-                    ]
-                  }
-                },
-                "Exemplo 3 - NF com produtos + peso e volume": {
-                  "value": {
-                    "chave": "48784564894456165789531657981",
-                    "numeroDocumentoFiscal": "98765432101234567",
-                    "dataEmissao": "2023-08-15T12:30:45.678Z",
-                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
-                    "pesoBruto": 15.5,
-                    "pesoLiquido": 13.8,
-                    "quantidadeVolume": 2,
-                    "especie": "caixas",
-                    "emitente": {
-                      "cnpj": "09876543210987",
-                      "razaoSocial": "Stark Industries",
-                      "nomeFantasia": "Stark",
-                      "endereco": {
-                        "logradouro": "Avenida Tony Stark",
-                        "numero": "123",
-                        "complemento": "Torre Stark",
-                        "bairro": "Malibu",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Los Angeles",
-                        "sigaUF": "CA",
-                        "cep": "90210"
-                      }
-                    },
-                    "destinatario": {
-                      "cpf": "36497824596",
-                      "razaoSocial": "Steve Rogers",
-                      "nomeFantasia": "Steve Rogers",
-                      "endereco": {
-                        "logradouro": "Rua dos idosos",
-                        "numero": "456",
-                        "complemento": "Sala 42",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Nova York",
-                        "sigaUF": "NY",
-                        "cep": "13578456"
-                      }
-                    },
-                    "total": {
-                      "valor": 1500,
-                      "valorFrete": 50,
-                      "valorDesconto": 100,
-                      "valorOutros": 20,
-                      "valorTotal": 1470
-                    },
-                    "produtosServicos": [
-                      {
-                        "quantidade": 1,
-                        "valorUnitario": 500,
-                        "valorTotalBruto": 500,
-                        "valorDesconto": 50,
-                        "valorEntraValorTotal": 450,
-                        "produtoServico": {
-                          "codigoProdutoServico": "001",
-                          "codigoBarra": "1234567890123",
-                          "descricao": "Escudo de Vibranium",
-                          "codigoNcm": "98765432",
-                          "unidadeComercial": "un"
-                        }
-                      },
-                      {
-                        "quantidade": 2,
-                        "valorUnitario": 600,
-                        "valorTotalBruto": 1200,
-                        "valorDesconto": 50,
-                        "valorEntraValorTotal": 1150,
-                        "produtoServico": {
-                          "codigoProdutoServico": "002",
-                          "codigoBarra": "9876543210987",
-                          "descricao": "Armadura Mark XLVII",
-                          "codigoNcm": "87654321",
-                          "unidadeComercial": "un"
-                        }
-                      }
-                    ]
-                  }
-                },
-                "Exemplo 4 - NF Básica com endereço de entrega diferente do endereço de cadastro do destinatário": {
-                  "value": {
-                    "chave": "48784564894456165789531657981",
-                    "numeroDocumentoFiscal": "98765432101234567",
-                    "dataEmissao": "2023-08-15T12:30:45.678Z",
-                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
-                    "emitente": {
-                      "cnpj": "09876543210987",
-                      "razaoSocial": "Stark Industries",
-                      "nomeFantasia": "Stark",
-                      "endereco": {
-                        "logradouro": "Avenida Tony Stark",
-                        "numero": "123",
-                        "complemento": "Torre Stark",
-                        "bairro": "Malibu",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Los Angeles",
-                        "sigaUF": "CA",
-                        "cep": "90210"
-                      }
-                    },
-                    "destinatario": {
-                      "cpf": "36497824596",
-                      "razaoSocial": "Steve Rogers",
-                      "nomeFantasia": "Steve Rogers",
-                      "endereco": {
-                        "logradouro": "Rua dos idosos",
-                        "numero": "456",
-                        "complemento": "Sala 42",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Nova York",
-                        "sigaUF": "NY",
-                        "cep": "13578456"
-                      }
-                    },
-                    "enderecoEntrega": {
-                      "logradouro": "Rua das Ilusões",
-                      "numero": "789",
-                      "complemento": "Bloco C",
-                      "bairro": "Fantasia",
-                      "codigoMunicipio": "",
-                      "nomeMunicipio": "Cidade dos Sonhos",
-                      "sigaUF": "FS",
-                      "cep": "54321000"
-                    }
-                  }
-                },
-                "Exemplo 5 - Pedido": {
-                  "value": {
-                    "idExterno": "78933654",
-                    "dataEmissao": "2023-08-15T12:30:45.678Z",
-                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
-                    "emitente": {
-                      "cnpj": "09876543210987",
-                      "razaoSocial": "Stark Industries",
-                      "nomeFantasia": "Stark",
-                      "endereco": {
-                        "logradouro": "Avenida Tony Stark",
-                        "numero": "123",
-                        "complemento": "Torre Stark",
-                        "bairro": "Malibu",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Los Angeles",
-                        "sigaUF": "CA",
-                        "cep": "90210"
-                      }
-                    },
-                    "destinatario": {
-                      "cpf": "36497824596",
-                      "razaoSocial": "Steve Rogers",
-                      "nomeFantasia": "Steve Rogers",
-                      "endereco": {
-                        "logradouro": "Rua dos idosos",
-                        "numero": "456",
-                        "complemento": "Sala 42",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Nova York",
-                        "sigaUF": "NY",
-                        "cep": "13578456"
-                      }
-                    }
-                  }
-                },
-                "Exemplo 6 - NF com veículo definido": {
-                  "value": {
-                    "chave": "48784564894456165789531657981",
-                    "numeroDocumentoFiscal": "98765432101234567",
-                    "dataEmissao": "2023-08-15T12:30:45.678Z",
-                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
-                    "placa": "MIO0103",
-                    "emitente": {
-                      "cnpj": "09876543210987",
-                      "razaoSocial": "Stark Industries",
-                      "nomeFantasia": "Stark",
-                      "endereco": {
-                        "logradouro": "Avenida Tony Stark",
-                        "numero": "123",
-                        "complemento": "Torre Stark",
-                        "bairro": "Malibu",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Los Angeles",
-                        "sigaUF": "CA",
-                        "cep": "90210"
-                      }
-                    },
-                    "destinatario": {
-                      "cpf": "36497824596",
-                      "razaoSocial": "Steve Rogers",
-                      "nomeFantasia": "Steve Rogers",
-                      "endereco": {
-                        "logradouro": "Rua dos idosos",
-                        "numero": "456",
-                        "complemento": "Sala 42",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Nova York",
-                        "sigaUF": "NY",
-                        "cep": "13578456"
-                      }
-                    }
-                  }
-                },
-                "Exemplo 7 - NF com IdExterno da Rota": {
-                  "value": {
-                    "chave": "48784564894456165789531657981",
-                    "numeroDocumentoFiscal": "98765432101234567",
-                    "dataEmissao": "2023-08-15T12:30:45.678Z",
-                    "dataSaidaEntrada": "2023-08-15T12:30:45.678Z",
-                    "motoristaNome": "João da Silva",
-                    "rotaRegiaoNome": "Região sul do estado",
-                    "idExternoRota": "55893",
-                    "emitente": {
-                      "cnpj": "09876543210987",
-                      "razaoSocial": "Stark Industries",
-                      "nomeFantasia": "Stark",
-                      "endereco": {
-                        "logradouro": "Avenida Tony Stark",
-                        "numero": "123",
-                        "complemento": "Torre Stark",
-                        "bairro": "Malibu",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Los Angeles",
-                        "sigaUF": "CA",
-                        "cep": "90210"
-                      }
-                    },
-                    "destinatario": {
-                      "cpf": "36497824596",
-                      "razaoSocial": "Steve Rogers",
-                      "nomeFantasia": "Steve Rogers",
-                      "endereco": {
-                        "logradouro": "Rua dos idosos",
-                        "numero": "456",
-                        "complemento": "Sala 42",
-                        "bairro": "Centro",
-                        "codigoMunicipio": "",
-                        "nomeMunicipio": "Nova York",
-                        "sigaUF": "NY",
-                        "cep": "13578456"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Erro",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/NotaFiscal/Cancelar": {
-      "post": {
-        "tags": [
-          "NotaFiscal"
-        ],
-        "summary": "Cancela uma nota fiscal",
-        "description": "Este endpoint é utilizado para cancelar uma nota fiscal. É necessário fornecer a chave, id externo ou número do documento fiscal da nota a ser cancelada.<br/><br/>O campo 'code' na resposta do endpoint é uma string e pode ser uma dessas a seguir: <br/>ERRO<br/>NF_OK<br/>NOT_OK<br/>OK<br/>NF_OK_REENTREGA<br/>NOT_OK_NF_EM_ROTA<br/>Podem ser inseridos mais campos futuramente.<br/>Data de atualização: 19/02/2024.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.NotaFiscalCancelamento"
-              },
-              "examples": {
-                "Exemplo 1 - Por chave": {
-                  "value": {
-                    "chave": "48784564894456165789531657981",
-                    "idExterno": "",
-                    "numeroDocumentoFiscal": ""
-                  }
-                },
-                "Exemplo 2 - Por id externo": {
-                  "value": {
-                    "chave": null,
-                    "idExterno": "78660",
-                    "numeroDocumentoFiscal": null
-                  }
-                },
-                "Exemplo 3 - Por chave": {
-                  "value": {
-                    "chave": "48784564894456165789531657981"
-                  }
-                },
-                "Exemplo 4 - Por id externo": {
-                  "value": {
-                    "idExterno": "78660"
-                  }
-                },
-                "Exemplo 5 - Por numero do documento": {
-                  "value": {
-                    "numeroDocumentoFiscal": "265832"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Users/login": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Realizar login para gerar o token bearer de autenticação.",
-        "description": "Tomar cuidado com a expiração do token (Expira meia noite).",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Monitoramento_Backend.Models.User"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserReturn"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "UrlBackend": {
-        "type": "object",
-        "properties": {
-          "Backend": {
-            "type": "string",
-            "default": "https://container-app-prod-ms-backend.proudsand-a95781db.eastus.azurecontainerapps.io"
-          }
-        }
-      },
-      "UserReturn": {
-        "type": "object",
-        "properties": {
-          "Token": {
-            "type": "string",
-            "default": "9yghsudffasiud0f8s9odj5sdf5s6df46sd7"
-          }
-        }
-      },
-      "Monitoramento_Backend.Models.Total": {
-        "type": "object",
-        "properties": {
-          "valor": {
-            "type": "number",
-            "format": "double"
-          },
-          "valorFrete": {
-            "type": "number",
-            "format": "double"
-          },
-          "valorDesconto": {
-            "type": "number",
-            "format": "double"
-          },
-          "valorOutros": {
-            "type": "number",
-            "format": "double"
-          },
-          "valorTotal": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Monitoramento_Backend.Models.Endereco": {
-        "required": [
-          "bairro",
-          "cep",
-          "logradouro"
-        ],
-        "type": "object",
-        "properties": {
-          "logradouro": {
-            "type": "string"
-          },
-          "numero": {
-            "type": "string",
-            "nullable": true
-          },
-          "complemento": {
-            "type": "string",
-            "nullable": true
-          },
-          "bairro": {
-            "type": "string"
-          },
-          "codigoMunicipio": {
-            "type": "string",
-            "nullable": true
-          },
-          "nomeMunicipio": {
-            "type": "string",
-            "nullable": true
-          },
-          "sigaUF": {
-            "type": "string",
-            "nullable": true
-          },
-          "cep": {
-            "type": "string"
-          },
-          "latitude": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "longitude": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "Monitoramento_Backend.Models.Pessoa": {
-        "type": "object",
-        "properties": {
-          "idExterno": {
-            "type": "string",
-            "nullable": true
-          },
-          "cpf": {
-            "type": "string",
-            "nullable": true
-          },
-          "cnpj": {
-            "type": "string",
-            "nullable": true
-          },
-          "razaoSocial": {
-            "type": "string",
-            "nullable": true
-          },
-          "nomeFantasia": {
-            "type": "string",
-            "nullable": true
-          },
-          "inscricaoEstadual": {
-            "type": "string",
-            "nullable": true
-          },
-          "telefone": {
-            "type": "string",
-            "nullable": true
-          },
-          "telefone2": {
-            "type": "string",
-            "nullable": true
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "tipo": {
-            "$ref": "#/components/schemas/Monitoramento_Backend.Models.TipoPessoa"
-          },
-          "endereco": {
-            "$ref": "#/components/schemas/Monitoramento_Backend.Models.Endereco"
-          },
-          "janelaHorarios": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Monitoramento_Backend.Models.JanelaHorario"
             },
-            "nullable": true
-          },
-          "enderecos": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Monitoramento_Backend.Models.PessoaEndereco"
+            "UserReturn": {
+                "type": "object",
+                "properties": {
+                    "Token": {
+                        "type": "string",
+                        "default": "9yghsudffasiud0f8s9odj5sdf5s6df46sd7"
+                    }
+                }
             },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "Monitoramento_Backend.Models.NotaFiscal": {
-        "type": "object",
-        "properties": {
-          "chave": {
-            "type": "string",
-            "nullable": true
-          },
-          "idExterno": {
-            "type": "string",
-            "nullable": true
-          },
-          "naturezaOperacao": {
-            "type": "string",
-            "nullable": true
-          },
-          "numeroDocumentoFiscal": {
-            "type": "string",
-            "nullable": true
-          },
-          "dataEmissao": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "dataSaidaEntrada": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "tipoOperacao": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "finalidadeEmissao": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "informacaoAdicionalFisco": {
-            "type": "string",
-            "nullable": true
-          },
-          "informacaoComplementar": {
-            "type": "string",
-            "nullable": true
-          },
-          "placa": {
-            "type": "string",
-            "nullable": true
-          },
-          "veiculoCodigoExterno": {
-            "type": "string",
-            "nullable": true
-          },
-          "formaPagamento": {
-            "type": "string",
-            "nullable": true
-          },
-          "pesoBruto": {
-            "type": "number",
-            "format": "double"
-          },
-          "pesoLiquido": {
-            "type": "number",
-            "format": "double"
-          },
-          "quantidadeVolume": {
-            "type": "number",
-            "format": "double"
-          },
-          "especie": {
-            "type": "string",
-            "nullable": true
-          },
-          "emitente": {
-            "$ref": "#/components/schemas/Monitoramento_Backend.Models.Pessoa"
-          },
-          "destinatario": {
-            "$ref": "#/components/schemas/Monitoramento_Backend.Models.Pessoa"
-          },
-          "total": {
-            "$ref": "#/components/schemas/Monitoramento_Backend.Models.Total"
-          },
-          "enderecoEntrega": {
-            "$ref": "#/components/schemas/Monitoramento_Backend.Models.Endereco"
-          },
-          "produtosServicos": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Monitoramento_Backend.Models.NotaFiscalProdutoServico"
+            "Monitoramento_Backend.Models.Total": {
+                "type": "object",
+                "properties": {
+                    "valor": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "valorFrete": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "valorDesconto": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "valorOutros": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "valorTotal": {
+                        "type": "number",
+                        "format": "double"
+                    }
+                },
+                "additionalProperties": false
             },
-            "nullable": true
-          },
-          "transportadoraDocumento": {
-            "type": "string",
-            "nullable": true
-          },
-          "cfop": {
-            "type": "string",
-            "nullable": true
-          }
+            "Monitoramento_Backend.Models.Endereco": {
+                "required": [
+                    "bairro",
+                    "cep",
+                    "logradouro"
+                ],
+                "type": "object",
+                "properties": {
+                    "logradouro": {
+                        "type": "string"
+                    },
+                    "numero": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "complemento": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "bairro": {
+                        "type": "string"
+                    },
+                    "codigoMunicipio": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "nomeMunicipio": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "sigaUF": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "cep": {
+                        "type": "string"
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "format": "double",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Monitoramento_Backend.Models.Pessoa": {
+                "type": "object",
+                "properties": {
+                    "idExterno": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "cpf": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "cnpj": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "razaoSocial": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "nomeFantasia": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "inscricaoEstadual": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "telefone": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "telefone2": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "tipo": {
+                        "$ref": "#/components/schemas/Monitoramento_Backend.Models.TipoPessoa"
+                    },
+                    "endereco": {
+                        "$ref": "#/components/schemas/Monitoramento_Backend.Models.Endereco"
+                    },
+                    "janelaHorarios": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Monitoramento_Backend.Models.JanelaHorario"
+                        },
+                        "nullable": true
+                    },
+                    "enderecos": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Monitoramento_Backend.Models.PessoaEndereco"
+                        },
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Monitoramento_Backend.Models.NotaFiscal": {
+                "type": "object",
+                "properties": {
+                    "chave": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "idExterno": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "naturezaOperacao": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "numeroDocumentoFiscal": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "dataEmissao": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "dataSaidaEntrada": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "tipoOperacao": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "finalidadeEmissao": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "informacaoAdicionalFisco": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "informacaoComplementar": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "placa": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "veiculoCodigoExterno": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "formaPagamento": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "pesoBruto": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "pesoLiquido": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "quantidadeVolume": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "especie": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "emitente": {
+                        "$ref": "#/components/schemas/Monitoramento_Backend.Models.Pessoa"
+                    },
+                    "destinatario": {
+                        "$ref": "#/components/schemas/Monitoramento_Backend.Models.Pessoa"
+                    },
+                    "total": {
+                        "$ref": "#/components/schemas/Monitoramento_Backend.Models.Total"
+                    },
+                    "enderecoEntrega": {
+                        "$ref": "#/components/schemas/Monitoramento_Backend.Models.Endereco"
+                    },
+                    "produtosServicos": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Monitoramento_Backend.Models.NotaFiscalProdutoServico"
+                        },
+                        "nullable": true
+                    },
+                    "transportadoraDocumento": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "cfop": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Monitoramento_Backend.Models.NotaFiscalProdutoServico": {
+                "type": "object",
+                "properties": {
+                    "quantidade": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "valorUnitario": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "valorTotalBruto": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "valorDesconto": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "valorEntraValorTotal": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "produtoServico": {
+                        "$ref": "#/components/schemas/Monitoramento_Backend.Models.ProdutoServico"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Monitoramento_Backend.Models.ProdutoServico": {
+                "type": "object",
+                "properties": {
+                    "codigoProdutoServico": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "codigoBarra": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "descricao": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "codigoNcm": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "unidadeComercial": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Monitoramento_Backend.Models.User": {
+                "required": [
+                    "empresaId",
+                    "userName"
+                ],
+                "type": "object",
+                "properties": {
+                    "userName": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Monitoramento_Backend.NFe_Dto.XMLDto": {
+                "type": "object",
+                "properties": {
+                    "xml": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Monitoramento_Backend.Models.TipoEmpresa": {
+                "enum": [
+                    0,
+                    1
+                ],
+                "type": "integer",
+                "format": "int32"
+            },
+            "Monitoramento_Backend.Models.TipoRastreadorVeiculo": {
+                "enum": [
+                    0,
+                    1,
+                    2,
+                    3
+                ],
+                "type": "integer",
+                "format": "int32"
+            },
+            "Monitoramento_Backend.Models.TipoRastreador": {
+                "enum": [
+                    1,
+                    2
+                ],
+                "type": "integer",
+                "format": "int32"
+            },
+            "Monitoramento_Backend.Models.TipoRoteirizacao": {
+                "enum": [
+                    0,
+                    1,
+                    2
+                ],
+                "type": "integer",
+                "format": "int32"
+            },
+            "Monitoramento_Backend.Models.TipoLocal": {
+                "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                "type": "integer",
+                "format": "int32"
+            },
+            "Monitoramento_Backend.Models.JanelaHorario": {
+                "required": [
+                    "diaDaSemana",
+                    "empresaId",
+                    "fim",
+                    "inicio"
+                ],
+                "type": "object",
+                "properties": {
+                    "inicio": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "fim": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "diaDaSemana": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Monitoramento_Backend.Models.AdicionarParadaDuranteRota": {
+                "enum": [
+                    0,
+                    1,
+                    2
+                ],
+                "type": "integer",
+                "format": "int32"
+            },
+            "Monitoramento_Backend.Models.TipoPessoa": {
+                "enum": [
+                    1,
+                    2,
+                    3
+                ],
+                "type": "integer",
+                "format": "int32"
+            },
+            "Monitoramento_Backend.Models.PessoaEndereco": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "endereco": {
+                        "$ref": "#/components/schemas/Monitoramento_Backend.Models.Endereco"
+                    },
+                    "enderecoFiscal": {
+                        "type": "boolean"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Monitoramento_Backend.Models_API.NotaFiscalCancelamento": {
+                "type": "object",
+                "properties": {
+                    "chave": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "idExterno": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "numeroDocumentoFiscal": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Monitoramento_Backend.Models_API.ResultApi": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "code": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "statusCodeHttp": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                },
+                "additionalProperties": false
+            }
         },
-        "additionalProperties": false
-      },
-      "Monitoramento_Backend.Models.NotaFiscalProdutoServico": {
-        "type": "object",
-        "properties": {
-          "quantidade": {
-            "type": "number",
-            "format": "double"
-          },
-          "valorUnitario": {
-            "type": "number",
-            "format": "double"
-          },
-          "valorTotalBruto": {
-            "type": "number",
-            "format": "double"
-          },
-          "valorDesconto": {
-            "type": "number",
-            "format": "double"
-          },
-          "valorEntraValorTotal": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "produtoServico": {
-            "$ref": "#/components/schemas/Monitoramento_Backend.Models.ProdutoServico"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Monitoramento_Backend.Models.ProdutoServico": {
-        "type": "object",
-        "properties": {
-          "codigoProdutoServico": {
-            "type": "string",
-            "nullable": true
-          },
-          "codigoBarra": {
-            "type": "string",
-            "nullable": true
-          },
-          "descricao": {
-            "type": "string",
-            "nullable": true
-          },
-          "codigoNcm": {
-            "type": "string",
-            "nullable": true
-          },
-          "unidadeComercial": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "Monitoramento_Backend.Models.User": {
-        "required": [
-          "empresaId",
-          "userName"
-        ],
-        "type": "object",
-        "properties": {
-          "userName": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string",
-            "format": "password",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "Monitoramento_Backend.NFe_Dto.XMLDto": {
-        "type": "object",
-        "properties": {
-          "xml": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "Monitoramento_Backend.Models.TipoEmpresa": {
-        "enum": [
-          0,
-          1
-        ],
-        "type": "integer",
-        "format": "int32"
-      },
-      "Monitoramento_Backend.Models.TipoRastreadorVeiculo": {
-        "enum": [
-          0,
-          1,
-          2,
-          3
-        ],
-        "type": "integer",
-        "format": "int32"
-      },
-      "Monitoramento_Backend.Models.TipoRastreador": {
-        "enum": [
-          1,
-          2
-        ],
-        "type": "integer",
-        "format": "int32"
-      },
-      "Monitoramento_Backend.Models.TipoRoteirizacao": {
-        "enum": [
-          0,
-          1,
-          2
-        ],
-        "type": "integer",
-        "format": "int32"
-      },
-      "Monitoramento_Backend.Models.TipoLocal": {
-        "enum": [
-          0,
-          1,
-          2,
-          3,
-          4
-        ],
-        "type": "integer",
-        "format": "int32"
-      },
-      "Monitoramento_Backend.Models.JanelaHorario": {
-        "required": [
-          "diaDaSemana",
-          "empresaId",
-          "fim",
-          "inicio"
-        ],
-        "type": "object",
-        "properties": {
-          "inicio": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "fim": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "diaDaSemana": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Monitoramento_Backend.Models.AdicionarParadaDuranteRota": {
-        "enum": [
-          0,
-          1,
-          2
-        ],
-        "type": "integer",
-        "format": "int32"
-      },
-      "Monitoramento_Backend.Models.TipoPessoa": {
-        "enum": [
-          1,
-          2,
-          3
-        ],
-        "type": "integer",
-        "format": "int32"
-      },
-      "Monitoramento_Backend.Models.PessoaEndereco": {
-        "type": "object",
-        "properties": {
-          "nome": {
-            "type": "string",
-            "nullable": true
-          },
-          "endereco": {
-            "$ref": "#/components/schemas/Monitoramento_Backend.Models.Endereco"
-          },
-          "enderecoFiscal": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Monitoramento_Backend.Models_API.NotaFiscalCancelamento": {
-        "type": "object",
-        "properties": {
-          "chave": {
-            "type": "string",
-            "nullable": true
-          },
-          "idExterno": {
-            "type": "string",
-            "nullable": true
-          },
-          "numeroDocumentoFiscal": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "Monitoramento_Backend.Models_API.ResultApi": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "code": {
-            "type": "string",
-            "nullable": true
-          },
-          "statusCodeHttp": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      }
+        "securitySchemes": {
+            "Bearer": {
+                "type": "apiKey",
+                "description": "Inserir o token JWT com Bearer",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
     },
-    "securitySchemes": {
-      "Bearer": {
-        "type": "apiKey",
-        "description": "Inserir o token JWT com Bearer",
-        "name": "Authorization",
-        "in": "header"
-      }
-    }
-  },
-  "security": [
-    {
-      "Bearer": []
-    }
-  ]
+    "security": [
+        {
+            "Bearer": [
+            ]
+        }
+    ]
 }
